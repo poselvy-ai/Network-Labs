@@ -2,7 +2,7 @@
 ## Diagram
 ![SSB Diagram](./diagrams/SSB_Network_Diagram(V1).png)
 
-SVI Troubleshooting. 
+## SVI Troubleshooting. 
 During the building of of the network I was not able to build the sub interfaces off of Port FA0 on HQRT1 as it built as L2 port instead of an L3 port. 
 While validating my configuration from a PC with the basic configuration for Corporate VLAN member and Sales Member I was not able to ping the *Default Gateway*. During my troubleshooting troubleshooting process I started from the HQRT1 moving to the PC I did.
 1. I checked to ensure that the *routes* where properly showing connected and the *VLAN* were properly configured according to the design. I also ensured that the *Trunk* was able to pass the *VLAN* across.
