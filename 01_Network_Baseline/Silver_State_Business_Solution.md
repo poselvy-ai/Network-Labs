@@ -55,7 +55,7 @@ The customer has accepted the risk for single points of failure between the rout
 |--------|------|---------|---------|---------
 |10|Corportate|headquarters|10.10.20.1|Segragates traffice into its own broadcast domoain|
 |20|Sales|Headquarters|10.10.30.1|Segragates Sales into its own broadcast domain|
-|30|Engineering|Headquarters|10.10.30.1|Segragates Engineering into its own broadcast domain|
+|30|Engineering|Headquarters|10.10.40.1|Segragates Engineering into its own broadcast domain|
 |222| IT Team | Headquarters | 172.16.10.1 | Provides & Segragates the IT user / managmnet networks
 
 ### IP Addressing 
