@@ -35,9 +35,18 @@ Design an intiial network that will support Silver State Business current capasi
  - Availability
 
 ## Architecture
-- Network Diagram 
-- Disgn Explanation 
-- Accpetpted Risk
+![Network Diagram](./diagrams/SSB_HQ_Network_Diagram.png)
+
+### Design Concept
+
+Silver State HQ Design allows for one ISP connection connecting to company's Cisco 8190CX router (HQRT1). HHQRT1 (G0) will PAT 203.0.113.10 to the users IP address requesting WAN connection. HQRT1 will provide the gateways for the internal LAN be connecting the LAN infrastructure to FA0. 
+
+The internal LAN consist of the access switches HQSW1 - HQSW3. HQSW1 is considered the "CORE" switch for this topology as it the switch directly connected to HQRT1 and is the STP Root for the LAN. HQSW2 is designated a critical switch in the infrastructure as it the primary connection point for the DHCP, DNC, and Application Server for the SSB. Each switch has been allocated a an IP address within the "Core Distribution" block. 
+
+
+### Accpetpted Risk
+
+The customer has accepted the risk for single points of failure between the router and access switch. You can see this in the design as HQRT1 is only connected to HQSW1. Also, the accepted the risk single point of failure between each switch as their only one inter face being used connect each switch. The design is not fault tolerant. 
 
 ## Network Design
 
