@@ -87,3 +87,10 @@ The customer has accepted the risk for single points of failure between the rout
 |172.16.10.200 - 172.16.10.220| HQ Server Block | To reserve space server for server and all them to grow | 
 |172.16.10.221 - 172.16.10.239 | No Target | Space is unreserved at this point| 
 |172.16.10.240 - 172.16.10.245 |Core, Distrobution, and access, switches | SVI / Management VLAN interface | 
+
+# Follow Me!
+
+Please follow me as I work through this project. 
+
+## [Lessons Learned](./Lesson_Learned.md)
+## Verification
