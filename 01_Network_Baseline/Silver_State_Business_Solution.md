@@ -1,67 +1,78 @@
 # Silver State Business Solutions
 
-Silver State Business Solutions (SSBS) is a growing professional-services company opening a new headquarters and connecting it to an existing small branch office.
-The company currently has approximately 85 employees at headquarters and 20 employees at the branch. Management expects moderate growth over the next three years and does not want the network redesigned simply because another 20–30 employees are hired.
-Your assignment is to design the initial enterprise network that will eventually become the production baseline for our NOC troubleshooting exercises.
+## Project Overview
 
-## Headquarters requirements
+### Business Scenarario
+Silver State Business Solutions (SSBS) is a growing professional-services company opening a new headquarters and connecting it to an existing small branch office. The company currently has approximately 85 employees at headquarters and 20 employees at the branch. Management expects moderate growth over the next three years and does not want the network redesigned simply because another 20–30 employees are hired. 
 
-HQ contains four business groups:
-Department / Function	Current devices
-Corporate / Administration	20
-Engineering / Operations	30
-Sales / Customer Service	25
-IT / Network Management	10
+### Scope 
+Design an intiial network that will support Silver State Business current capasity and their ability to grow. 
+
+>[!NOTE]
+>Cisco Packet tracer:  Packet Tracer is a simulator, not an emulator. It mimics the behavior of commands rather than running real Cisco software. It lacks the capabilities to configure enterprise-grade protocols like BGP (Border Gateway Protocol), MPLS (Multiprotocol Label Switching), or DMVPN (Dynamic Multipoint VPN).
+
+## Business & Technicla Requirments
+
+- Headquarters
+ 1. Supports 85 users.
+ 2. HQ contains for business groups: Corportate, Engineering, Sales, and IT
+ 3. Users ind different depertments must be able to communicate where permited
+ 
+- Branch
+ 1. Supports 20 users. 
+ 2. Uses diffent IP subnet then HQ
+ 
+ - Infrasturcture
+ 1. Users devices are supported by DHCP
+ 2. DNS server must pervide name resolution for the company. 
+ 3. Application/Web Server is deployed on the internal network
+ 4. Infrasturcture seperate Infrasturcture for services, but must be able to grow. 
+ 
+ - Internet
+ 1. ISP WAN IP allocation 203.0.113.8/30 
+ 2. Internal IP address must follow RFC1918 private IPv4 address. 
+ 
+ - Availability
+
+## Architecture
+- Network Diagram 
+- Disgn Explanation 
+- Accpetpted Risk
+
+## Network Design
+
+### VLAN Design
+|VLAN ID | Name | Network | Gateway | Purpose|
+|--------|------|---------|---------|---------
+|10|Corportate|headquarters|10.10.20.1|Segragates traffice into its own broadcast domoain|
+|20|Sales|Headquarters|10.10.30.1|Segragates Sales into its own broadcast domain|
+|30|Engineering|Headquarters|10.10.30.1|Segragates Engineering into its own broadcast domain|
+|222| IT Team | Headquarters | 172.16.10.1 | Provides & Segragates the IT user / managmnet networks
+
+### IP Addressing 
+
+- HQ User networks
+|VLAN ID| Target | CIDR | Gatweay | DHCP Usable Range|
+|--------|--------|------|---------|-----------------|
+|10| Corporate Users | 10.10.20.0/24 | 10.10.20.1 | 10.10.20.2 - 10.10.20.254|
+|20| Sales Users | 10.10.30.0/24 | 10.10.30.1 | 10.10.30.2 - 10.10.30.254|
+|30| Engineering Uusers| 10.10.40.0/24 | 10.10.40.1 | 10.10.40.2 - 10.10.40.24 |
+|222| IT Uuser | 172.16.10.0/24| 172.16.10.1 |172.16.10.2 - 172.16.10.148|
 
 
-These groups must be logically separated at Layer 2.
-
-In addition, HQ requires a separate network for servers and infrastructure services. Initially this will contain approximately 10 devices, but capacity should exist for expansion.
-
-Users in different departments must be able to communicate where permitted. Therefore, your design must provide inter-VLAN routing.
-
-## Infrastructure services
-HQ will host internal infrastructure services.
-
-At minimum, the environment needs:
-
-- DHCP — User workstations should receive their IPv4 configuration dynamically. Network infrastructure should generally use predictable addressing.
-- DNS — An internal DNS server must provide name resolution for company resources.
-- Application/Web Server — Deploy an internal server that users can reach by hostname. This gives us something useful to test at Layers 3–7.
-
-## Internet connectivity
-HQ has one ISP connection.
-
-The ISP has provided the company with this WAN allocation:
-
-**203.0.113.8/30**
-ISP controls the first usable address.
-
-Internal company addressing must use RFC1918 private IPv4 space.
-
-Users must be able to access simulated Internet resources through the company Internet connection.
 
 
-## Switching requirements
-HQ requires at least two access switches.
-- Employees connected to different switches may belong to the same department.
-- Design therefore needs to support VLAN traffic between switches.
-- Management is also concerned about accidental switching loops and wants the network capable of supporting redundant Layer 2 connections in the future.
-
-
-## Branch office
-The branch contains approximately 20 employees.
-- For Lab 1, you only need to reserve addressing space and account for the branch in your architecture. 
-- The branch must use a different IP subnet from HQ networks.
-
-## Design constraints
-This is a small-to-medium enterprise. Don't build a Fortune 500 network for an 85-person headquarters.
-- Don't build a flat home network.
-- Solution should be understandable by another network engineer who inherits it at 2:00 AM during an outage.
-- Use meaningful hostnames and maintain consistent addressing conventions.
-- You may use Cisco Packet Tracer devices of your choice, but if Packet Tracer doesn't support a feature exactly as real Cisco hardware would, document the limitation rather than designing around imaginary functionality.
-
-## Success criteria
-When the baseline is eventually complete, I should be able to connect a new workstation to the appropriate access port and have it:
-PC → switch → VLAN → DHCP → default gateway → inter-VLAN routing → DNS → internal server → Internet
-Every one of those steps will later become a potential incident.
+- HQ Infrasturcture / static range
+|IP Range | Allocation Target | Purpose|
+|---------|-------------------|--------|
+|10.10.20.1 | Gateway | Core Router termination point fore VLAN 10 & Internal routing |
+|10.10.30.1 | Gateway | Core Router termination point fore VLAN 20 & Internal routing |
+|10.10.40.1 | Gateway | Core Router termination point fore VLAN 30 & Internal routing |
+|10.10.20.2 - 10.10.20.254 | DHCP Pool | DHCP Pool for VLAN 10|
+|10.10.30.2 - 10.10.30.254 | DHCP Pool | DHCP Pool for VLAN 20|
+|10.10.40.2 - 10.10.40.254 | DHCP Pool | DHCP Pool for VLAN 30|
+|172.16.10.2 -172.16.10.148 | DHCP Pool | DHCP Pool for VLAN 222|
+|172.16.10.149 - 172.16.10.199| HQ Device Block | To reserve space for HQ devices that need IP reservation | 
+|172.16.10.200 - 172.16.10.220| HQ Server Block | To reserve space server for server and all them to grow | 
+|172.16.10.221 - 172.16.10.239 | No Target | Space is unreserved at this point| 
+|172.16.10.240 - 172.16.10.245 |Core, Distrobution, and access, switches | SVI / Management VLAN interface | 
