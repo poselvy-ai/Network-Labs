@@ -52,6 +52,7 @@ Design an intiial network that will support Silver State Business current capasi
 ### IP Addressing 
 
 - HQ User networks
+  
 |VLAN ID| Target | CIDR | Gatweay | DHCP Usable Range|
 |--------|--------|------|---------|-----------------|
 |10| Corporate Users | 10.10.20.0/24 | 10.10.20.1 | 10.10.20.2 - 10.10.20.254|
@@ -63,6 +64,7 @@ Design an intiial network that will support Silver State Business current capasi
 
 
 - HQ Infrasturcture / static range
+  
 |IP Range | Allocation Target | Purpose|
 |---------|-------------------|--------|
 |10.10.20.1 | Gateway | Core Router termination point fore VLAN 10 & Internal routing |
