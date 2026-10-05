@@ -294,5 +294,3 @@ line vty 0 4
 !
 end
 ```
-!
-end
