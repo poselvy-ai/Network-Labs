@@ -1,7 +1,7 @@
 # 2026-10-5 Baseline configurations
 ## Router
 ### HQRT1
-
+```bash
 HWSW3#show run
 Building configuration...
 
@@ -69,13 +69,12 @@ line vty 0 4
  transport input ssh
 !
 end
-
+```
 ## Switches 
 ### HQSW1
-
+```bash
 HQSW1#show run
 Building configuration...
-
 Current configuration : 1360 bytes
 !
 ! Last configuration change at 22:38:51 UTC Mon Oct 5 2026
@@ -151,9 +150,9 @@ line vty 0 4
  transport input ssh
 !
 end
-
+```
 ### HQSW2
-
+```bash
 HQSW2#show run
 Building configuration...
 
@@ -223,8 +222,9 @@ line vty 0 4
  transport input ssh
 !
 end
-
+```
 ### HQSW3
+```bash
 HWSW3#show run
 Building configuration...
 
@@ -292,5 +292,7 @@ line vty 0 4
  login    
  transport input ssh
 !
+end
+```
 !
 end
