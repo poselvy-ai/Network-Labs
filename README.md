@@ -10,4 +10,4 @@ As I progress through each lab I will explain why I created the lab, build the a
 
 |#|Name|Status|
 |----|-------|--------|
-|1|[Enterprise Network Baseline](./01_Network_Baseline) |In Progress|
+|1|[Silver State Business](.01_Silver_State_Business) |In Progress|
