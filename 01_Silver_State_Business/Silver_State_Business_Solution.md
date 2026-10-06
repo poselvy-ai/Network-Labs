@@ -8,8 +8,14 @@ Silver State Business Solutions (SSBS) is a growing professional-services compan
 ### Scope 
 Design an intiial network that will support Silver State Business current capasity and their ability to grow. 
 
->[!NOTE]
->Cisco Packet tracer:  Packet Tracer is a simulator, not an emulator. It mimics the behavior of commands rather than running real Cisco software. It lacks the capabilities to configure enterprise-grade protocols like BGP (Border Gateway Protocol), MPLS (Multiprotocol Label Switching), or DMVPN (Dynamic Multipoint VPN).
+### Phases
+
+The project will be built and verified in three distinct phases. 
+| Phase | Location | Networking Skills | 
+|-------|----------|-------------------|
+| 1 | HQ Site | DHCP, DNS, VLAN, Inter-VLAN Routing, PAT |
+| 2 | Branch Site | DHCP, Internet, PAT|
+| 3 | HQ <--> Branch | VPN tunnel between sites | 
 
 ## Business & Technicla Requirments
 
@@ -35,7 +41,7 @@ Design an intiial network that will support Silver State Business current capasi
  - Availability
 
 ## Architecture
-![Network Diagram](./diagrams/SSB_HQ_Network_Diagram.png)
+![Network Diagram](./diagram/SSB_HQ_Network_Diagram.pngg)
 
 ### Design Concept
 
