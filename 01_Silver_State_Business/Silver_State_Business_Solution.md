@@ -41,7 +41,7 @@ The project will be built and verified in three distinct phases.
  - Availability
 
 ## Architecture
-![Network Diagram](./01_Silver_State_Business/diagram/SSB_HQ_Network_Diagram.pngg)
+![Network Diagram](./01_Silver_State_Business/diagram/SSB_HQ_Network_Diagram.png)
 ### Design Concept
 
 Silver State HQ Design allows for one ISP connection connecting to company's Cisco 8190CX router (HQRT1). HHQRT1 (G0) will PAT 203.0.113.10 to the users IP address requesting WAN connection. HQRT1 will provide the gateways for the internal LAN be connecting the LAN infrastructure to FA0. 
