@@ -1,0 +1,182 @@
+HQRT1#copy run start
+Destination filename [startup-config]? copy run start C:\Users\posel\OneDrive\Projects\HQRT2026106.txt
+%Error copying nvram:copy (Invalid argument)
+HQRT1#copy run start                                                 
+Destination filename [startup-config]? C:\Users\posel\OneDrive\Projects\HQRT2026106.txt               
+%Error parsing C:\Users\posel\OneDrive\Projects\HQRT2026106.txt (Bad file number)
+%Error copying nvram:C:\Users\posel\OneDrive\Projects\HQRT2026106.txt (Invalid argument)
+HQRT1#copy run start                                  
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+HQRT1#show run
+HQRT1#show running-config 
+Building configuration...
+
+Current configuration : 3482 bytes
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname HQRT1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+ip cef
+login on-success log
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-131184649
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-131184649
+ revocation-check none
+ rsakeypair TP-self-signed-131184649
+ hash sha512
+!         
+!
+crypto pki certificate chain TP-self-signed-131184649
+ certificate self-signed 01
+  3082032E 30820216 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  30312E30 2C060355 04030C25 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31333131 38343634 39301E17 0D323631 30303730 31353831 
+  355A170D 33363130 30363031 35383135 5A303031 2E302C06 03550403 0C25494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3133 31313834 
+  36343930 82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 
+  82010100 87CD30F9 B631A343 1D8177FE 511D75A9 DDA5DC54 56A6EAEE C42C4A75 
+  8B608551 D9D384E8 B0487D5C 5202D6CE 02ED0814 828EA8AC 7B4FC5BE 49636F34 
+  804CDFC1 35775B85 C04774FB 48A151CF 45E47C88 9CA17E44 F04101A3 FC6B4FF8 
+  72E947A5 D69D5164 5F2998C4 1133C018 0E0563C3 6DCB7E3E 2B2A3192 8F0A8B5F 
+  1394D34D 69E14FD7 7C2586AC 75AC3A0F 0E41E3EF 353F63E4 FD4257F0 F99EEF68 
+  6C2796A5 DCA296A8 B5DBD743 635A5AA8 DDD6FB9B 1025B76F C42971C6 270643D1 
+  876FD219 0837D907 637F982C 3A87B491 F4B98EE8 5B48A711 C6C59646 8221090D 
+  FABA13D2 D5D2E7B9 264BFDDE 9D240F3A A154CBF1 4BE71734 49A7B31A 3C3DC9AA 
+  B919172D 02030100 01A35330 51301D06 03551D0E 04160414 393431F3 8FCAF765 
+  D7C70F4E 43CBE09E 9A66A981 301F0603 551D2304 18301680 14393431 F38FCAF7 
+  65D7C70F 4E43CBE0 9E9A66A9 81300F06 03551D13 0101FF04 05300301 01FF300D 
+  06092A86 4886F70D 01010D05 00038201 0100368C 275EC803 A655E026 3FDFA077 
+  230BA19B 981D021A DBD3708E B043337C 557C5F78 BD0EFE2C 9CE87CC2 3A71BC30 
+  ED304410 4E3C3229 3A77D573 67D9198A B1856CA3 9A211B67 BCC5DC60 D4816B9A 
+  94271285 9A6EB67E 40BFD182 317E1EFD 5CEE5242 CB2FDD68 78DC819C 6735E24C 
+  075A0DDD FA703FE4 E3B61AD5 9FD7A0C7 5CE096DE 7F80C3B6 EA1555CD B1D8A4CF 
+  F52BE2E2 65072DF0 2D156852 5BA267AA F03BB245 72B52090 823E86AA C85DD4C3 
+  A8EDE256 8B437A6E 2651AFDF 86F897AC F44F8729 C457ADEA BA50A334 D38B5D04 
+  4858BD74 ED836A62 628BB44D BFA2F0DD 5D46C1DA 2D547769 23AD0FBF 16D9AC25 
+  BBCAAF9F E48088E6 9C65CC67 F74E04FE 74FC
+        quit
+!
+!
+memory free low-watermark processor 79983
+!
+!
+spanning-tree mode rapid-pvst
+!
+!
+!
+!
+!
+!
+!
+! 
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+!
+interface Ethernet0/1
+ no ip address
+!
+interface Ethernet0/1.10
+ encapsulation dot1Q 10
+ ip address 10.10.20.1 255.255.255.0
+ ip helper-address 172.16.10.200
+!
+interface Ethernet0/1.20
+ encapsulation dot1Q 20
+ ip address 10.10.30.1 255.255.255.0
+ ip helper-address 172.16.10.200
+!
+interface Ethernet0/1.30
+ encapsulation dot1Q 30
+ ip address 10.10.40.1 255.255.255.0
+ ip helper-address 172.16.10.200
+!
+interface Ethernet0/1.222
+ encapsulation dot1Q 222
+ ip address 172.16.10.1 255.255.255.0
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown 
+!
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+no logging btrace
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input ssh
+!         
+!
+!
+!
+end
+
+HQRT1#
