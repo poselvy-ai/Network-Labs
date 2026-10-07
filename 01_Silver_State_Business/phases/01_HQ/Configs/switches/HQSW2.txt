@@ -1,0 +1,157 @@
+HQSW2#show run
+Building configuration...
+
+Current configuration : 3668 bytes
+!
+! Last configuration change at 02:40:32 UTC Wed Oct 7 2026
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname HQSW2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+ --More-- 
+*Oct  7 02:45:41.096: %AMDP2_FE-6-EXCESSCOLL: Ethernet1/0 TDR=0, TRC=0
+!         
+!
+!
+!
+!
+!
+ip audit notify log
+ip audit po max-events 100
+ip cef
+login on-success log
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-131184647
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-131184647
+ revocation-check none
+ rsakeypair TP-self-signed-131184647
+ hash sha512
+!
+!
+crypto pki certificate chain TP-self-signed-131184647
+ certificate self-signed 01
+  3082032E 30820216 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  30312E30 2C060355 04030C25 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31333131 38343634 37301E17 0D323631 30303730 32343035 
+  325A170D 33363130 30363032 34303532 5A303031 2E302C06 03550403 0C25494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3133 31313834 
+  36343730 82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 
+  82010100 9D74E522 45C80D6A FEA979C7 FBC86FAD 15326C50 9DD83895 EA130D2A 
+  69D87782 6C7F188F 69A19013 61C7BD28 0F88E611 10027640 E5223F0E 3B18623A 
+  5CD5726B A9A1DA02 F241D10A B1E434CE C3293831 59032A34 8771F2CE DE5E2F10 
+  FC5793C2 DBE01DB2 21AF3AD7 BF3F3BBE 2B5CFDEC F565BF60 B0D9A973 6E740EE9 
+  9BF59E27 A2418E7D F4BDB3F7 38E7534B AB1AC6A6 FB948ECF E9901889 C861E8BC 
+  CC6D4139 AD6A316A 23F7FA2F 2CD960F5 3F3DA462 CA72E581 CE749527 431D24B0 
+  C77A76FE 0792297E 7306EFEE 048AE4E1 C834E4D0 E4882CD5 B421A450 050EB67D 
+  5AC14971 82942985 27631DD7 82A61CDA 0D5B1C52 046CD2C8 02B2203D E1BD655C 
+  E3F28E17 02030100 01A35330 51301D06 03551D0E 04160414 9E323EB8 7B511816 
+  BE0FC7CC 5B1E4F65 2561AF1A 301F0603 551D2304 18301680 149E323E B87B5118 
+  16BE0FC7 CC5B1E4F 652561AF 1A300F06 03551D13 0101FF04 05300301 01FF300D 
+  06092A86 4886F70D 01010D05 00038201 01002229 3E643C5D 719E08AF B3B28064 
+  071ADECB FE59AFC8 10CCE1CE DD12DABF E5147D11 5E86E388 747DB6FB 1CBCEA6A 
+  2EFC16AE 9369B06F 4E64CA50 A98CE8ED 0192395D A5CC0BF0 BC2DB4EA 98C5151E 
+  EA3F67D4 2ED5C9B5 5F8A167B ACD2F52A E418FAE8 FEAC6E79 CA1D0C97 14496364 
+  33EB867D 87BF8E15 06BEE93E 6F5C164E 6285B835 E7F2BEB7 B13463BC A53E0BE9 
+  847FED74 9E10DDB2 B38D3B27 639B12C0 56E3660C B37B5B55 C8FDA1C2 6B989960 
+  583D466F 277E6F61 31F1B9E3 7D04D7DF 2512A61A FB902C01 792473ED 2172EE9E 
+  8ACDD8D3 FB3DE7D3 E61280B1 F532F88C 82CBFB20 02B4CBE2 A27EBE4B 671E2D70 
+  5DA925EB 8F17802E 8DBF66FC 84449462 1D10
+        quit
+!
+!
+memory free low-watermark processor 79497
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!         
+!
+interface Ethernet0/0
+ description HQSW2 to HQSW1
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,20,30,222
+ switchport mode trunk
+!
+interface Ethernet0/1
+ description HQSW2 to HQSW3
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,20,30,222
+ switchport mode trunk
+!
+interface Ethernet0/2
+ switchport access vlan 222
+ switchport mode access
+!
+interface Ethernet0/3
+ switchport access vlan 222
+ switchport mode access
+!
+interface Ethernet1/0
+ switchport access vlan 222
+ switchport mode access
+!
+interface Ethernet1/1
+!
+interface Ethernet1/2
+!
+interface Ethernet1/3
+!
+interface Vlan222
+ ip address 172.16.10.252 255.255.255.0
+ shutdown
+!
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+!
+no logging btrace
+!
+!         
+!
+control-plane
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input ssh
+!
+!
+end
