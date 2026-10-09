@@ -71,6 +71,10 @@ Each decision records what was chosen, what else was considered, and why. This i
 
 Every device: SSH v2 only with local users, `enable secret`, `no ip http server`, `no ip domain lookup`, unused native VLAN 999, `switchport nonegotiate` on trunks, PortFast + BPDU Guard on access ports.
 
+## DD-07 - Single-Node for internet
+
+The internet in simulation with connect to one single node (ISP1). In production each site will connect to it own provider.
+
 ---
 
 ## Accepted risks
