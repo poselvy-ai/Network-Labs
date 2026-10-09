@@ -27,7 +27,7 @@ Silver State Business Solutions is a professional-services company opening a new
 ## Topology
 
 ### Physical Typology 
-![Physical Typology](./design/diamgramsSSB_Phyiscal_Network_Diagram.png)
+![Physical Typology](./design/diamgrams/SSB_Phyiscal_Network_Diagram.png)
 
 
 ## Design summary
