@@ -26,41 +26,9 @@ Silver State Business Solutions is a professional-services company opening a new
 
 ## Topology
 
-```mermaid
-flowchart TB
-    INET["ISP1<br/>Lo0 8.8.8.8 (simulated internet)"]
-    INET -- "203.0.113.8/30" --- HQRT1
-    INET -- "203.0.113.12/30" --- BRRT1
-    HQRT1 -. "Tunnel0 172.31.0.0/30<br/>IKEv2 / IPsec VTI + OSPF" .- BRRT1
+### Physical Typology 
+![Physical Typology](./design/diamgramsSSB_Phyiscal_Network_Diagram.png)
 
-    subgraph HQ["HQ — 10.10.0.0/16"]
-        HQRT1["HQRT1<br/>Router-on-a-stick, DHCP, PAT"]
-        HQSW1["HQSW1<br/>STP root (4096)"]
-        HQSW2["HQSW2<br/>STP secondary (8192)"]
-        HQSW3["HQSW3"]
-        SRV1["SRV1 10.10.50.10<br/>DNS + Web"]
-        HQRT1 -- trunk --- HQSW1
-        HQSW1 -- trunk --- HQSW2
-        HQSW1 -- trunk --- HQSW3
-        HQSW2 -- "trunk (blocked at HQSW3)" --- HQSW3
-        HQSW2 --- SRV1
-        HQSW1 --- PCIT["PC-IT v40"]
-        HQSW2 --- PCENG["PC-ENG v30"]
-        HQSW3 --- PCCORP["PC-CORP v10"]
-        HQSW3 --- PCSALES["PC-SALES v20"]
-    end
-
-    subgraph BR["Branch — 10.20.0.0/16"]
-        BRRT1["BRRT1<br/>Router-on-a-stick, DHCP, PAT"]
-        BRSW1["BRSW1"]
-        BRRT1 -- trunk --- BRSW1
-        BRSW1 --- BPC1["PC-BR-CORP v10"]
-        BRSW1 --- BPC2["PC-BR-SALES v20"]
-        BRSW1 --- BPC3["PC-BR-ENG v30"]
-    end
-```
-
-Polished diagrams (physical and logical) live in [`design/diagrams/`](./design/diagrams/).
 
 ## Design summary
 
