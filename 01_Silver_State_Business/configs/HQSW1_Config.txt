@@ -1,0 +1,135 @@
+HQSW1#show run
+Building configuration...
+
+Current configuration : 1784 bytes
+!
+! Last configuration change at 00:15:52 UTC Sun Oct 11 2026
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname HQSW1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+ip audit notify log
+ip audit po max-events 100
+ip domain name ssbs.internal
+ip cef
+login on-success log
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+vtp mode transparent
+!
+!
+!
+!         
+memory free low-watermark processor 79497
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 10,20,30,40,50,99,999 priority 4096
+!
+username netadmin privilege 15 secret 9 $9$T6VoYibmqK9Uk.$Ar.GmUV5tmed8z1t9o4n8AQbIDHa.JLEr.jqlfP/WEA
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name CORP
+!
+vlan 20
+ name SALES
+!
+vlan 30
+ name ENG
+!
+vlan 40
+ name IT  
+!
+vlan 50
+ name SERVERS
+!
+vlan 99
+ name MGMT
+!
+vlan 999
+ name NATIVE-UNUSED
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,40,50,99
+ switchport mode trunk
+!
+interface Ethernet0/1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,40,50,99
+ switchport mode trunk
+!
+interface Ethernet0/2
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,40,50,99
+ switchport mode trunk
+!
+interface Ethernet0/3
+ switchport access vlan 40
+ switchport mode access
+!
+interface Vlan99
+ ip address 10.10.99.11 255.255.255.0
+!
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+!
+no logging btrace
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+end
