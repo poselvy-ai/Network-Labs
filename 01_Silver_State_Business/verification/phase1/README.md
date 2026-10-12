@@ -1,6 +1,6 @@
 # Verification
-## Layer  verification 
-```txt
+## Layer 2 verification 
+```bash
 HQSW1#show int trunk   
 
 Port           Mode             Encapsulation  Status        Native vlan  
