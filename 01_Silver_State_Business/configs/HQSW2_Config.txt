@@ -1,15 +1,15 @@
-HQSW3#show run
+HQSW2#show run
 Building configuration...
 
-Current configuration : 1499 bytes
+Current configuration : 3899 bytes
 !
-! Last configuration change at 00:12:08 UTC Sun Oct 11 2026
+! Last configuration change at 23:47:13 UTC Mon Oct 12 2026
 !
 version 17.16
 service timestamps debug datetime msec
 service timestamps log datetime msec
 !
-hostname HQSW3
+hostname HQSW2
 !
 boot-start-marker
 boot-end-marker
@@ -31,6 +31,7 @@ no aaa new-model
 !
 ip audit notify log
 ip audit po max-events 100
+ip domain name ssbs.internal
 ip cef
 login on-success log
 no ipv6 cef
@@ -43,7 +44,43 @@ no ipv6 cef
 !
 vtp mode transparent
 !
+crypto pki trustpoint TP-self-signed-131184653
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-131184653
+ revocation-check none
+ rsakeypair TP-self-signed-131184653
+ hash sha512
 !
+!
+crypto pki certificate chain TP-self-signed-131184653
+ certificate self-signed 01
+  3082032E 30820216 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  30312E30 2C060355 04030C25 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31333131 38343635 33301E17 0D323631 30313232 33323132 
+  305A170D 33363130 31313233 32313230 5A303031 2E302C06 03550403 0C25494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3133 31313834 
+  36353330 82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 
+  82010100 8FE58587 030BD128 4CCD806B CABF15F9 D5D08AAE 8041DE3F D914E26B 
+  BC3B4451 F7AC04AD 6BFAD420 1FD68189 ED1C3706 16E32972 4D6CD754 37D58BAC 
+  3995F4D4 4F7A8F5B D99F86EE CDA8DF87 A61A228B 03A25250 669530A2 C8228FC4 
+  7A46C66D 35C6E19B D2145E17 E2247575 9AE52A94 01477B98 C915AB99 F7E0E146 
+  A6D6F9F8 59834853 F6590614 2E154544 02180BF9 7AD650E7 511EAFF9 7533135A 
+  480F28FD 65365F7F A07AC70E E1C1FA07 77081453 8411EAE5 CBDBCF2A 27034786 
+  53AC798E 7A93B356 E4BFF91A 34EDDB46 0CF85407 F5FBD68D B55B9A3E 40CC2087 
+  892EB335 116B2AAC EE8202E4 49C15FEF 1983EC52 13047A00 AA25E221 E220016E 
+  1ED592CF 02030100 01A35330 51301D06 03551D0E 04160414 C0017E29 4B46ADFD 
+  25857B31 72B7A2C4 B5E17E9A 301F0603 551D2304 18301680 14C0017E 294B46AD 
+  FD25857B 3172B7A2 C4B5E17E 9A300F06 03551D13 0101FF04 05300301 01FF300D 
+  06092A86 4886F70D 01010D05 00038201 01004CBB 7B604233 7D942156 7773EF04 
+  7A48269C 5ED57B73 EDD92A6D D02548B6 C4C54287 1059DEB1 DFAEBDB9 DFD655E3 
+  90BA1CFA 72ABACE9 9A298B5B 0D6624ED 6BD554C2 5E26D4E9 39374E86 F9B6CF3B 
+  997A3455 ACE93B69 ED2A0633 8DDD8E00 F263DB72 F0855F42 133BE270 77717274 
+  0F4E5562 6310E757 B07F70F4 EAC631AC FA48F918 22839961 C7E7A6AA 98A2C8D5 
+  597F3B2A 0A9108D7 3012A201 2D09D867 A3F59339 FE518892 B2F15858 AB5A1D3C 
+  42F62092 91CE7AF1 41CB3C01 63A30BB1 2302C9E0 876343A0 F7FF44C2 8FEB6274 
+  3FA36622 80D376EB 903235FC 3BDC2617 D456AF04 A4AFC98C 0C589748 08783589 
+  18890771 56E9EC3D 8DF19F23 3372C4D5 B19D
+        quit
 !
 !
 memory free low-watermark processor 79497
@@ -51,8 +88,10 @@ memory free low-watermark processor 79497
 !
 spanning-tree mode rapid-pvst
 spanning-tree extend system-id
+spanning-tree vlan 10,20,30,40,50,99,999 priority 8192
 !
-!
+username netadmin privilege 15 secret 9 $9$AXNzra423hvlxU$YaKXQi4egz317IGF9ePtmIwTyQjKQVtS/WwMV/o6ulU
+!         
 vlan internal allocation policy ascending
 !
 vlan 10
@@ -69,13 +108,13 @@ vlan 40
 !
 vlan 50
  name SERVERS
-!         
+!
 vlan 99
  name MGMT
 !
 vlan 999
  name NATIVE-UNUSED
-!
+!         
 !
 !
 !
@@ -93,15 +132,15 @@ interface Ethernet0/1
  switchport mode trunk
 !
 interface Ethernet0/2
- switchport access vlan 10
+ switchport access vlan 50
  switchport mode access
 !
 interface Ethernet0/3
- switchport access vlan 20
+ switchport access vlan 30
  switchport mode access
 !
 interface Vlan99
- ip address 10.10.99.13 255.255.255.0
+ ip address 10.10.99.12 255.255.255.0
 !
 ip forward-protocol nd
 ip forward-protocol udp
@@ -123,7 +162,7 @@ line con 0
  logging synchronous
 line aux 0
 line vty 0 4
- login
+ login local
  transport input ssh
 !
 !
