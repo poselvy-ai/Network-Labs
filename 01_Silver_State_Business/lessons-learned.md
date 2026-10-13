@@ -15,8 +15,9 @@ Record problems as you hit them. Format: **Symptom → Cause → Fix → What I'
 - Packet Tracer interface names (Gi0/0, Fa0/1) don't exist on CML IOL nodes (Ethernet0/0...). Diagrams now use the CML names.
 
 
-**Symptom**: VLAN 99 STP topology differed from VLANs 10–50. HQSW3 saw HQSW2 as root for VLAN 99, E0/0 stuck Desg BLK, and HQSW1 E0/2 / HQSW3 E0/0 were both designated.
-**Evidence**: HQSW1 sent 1753 BPDUs; HQSW3 received 760. 148 forwarding transitions on HQSW3 E0/0. Input errors increasing on HQSW1 E0/2.
-**Cause**: Faulty HQSW1 E0/2 ↔ HQSW3 E0/0 link dropping frames. Lost BPDUs caused RSTP to repeatedly reconverge VLAN 99.
-**Fix**: Bouncing the ports didn’t help. Deleting and recreating the link in CML fixed it.
-**Lesson**: Verify STP per VLAN, not just one. BPDU sent/received counters reveal one-way loss. In production, UDLD and Loop Guard protect against this failure.
+## VLAN Troubleshooting
+ - **Symptom**: VLAN 99 STP topology differed from VLANs 10–50. HQSW3 saw HQSW2 as root for VLAN 99, E0/0 stuck Desg BLK, and HQSW1 E0/2 / HQSW3 E0/0 were both designated.
+ - **Evidence**: HQSW1 sent 1753 BPDUs; HQSW3 received 760. 148 forwarding transitions on HQSW3 E0/0. Input errors increasing on HQSW1 E0/2.
+ - **Cause**: Faulty HQSW1 E0/2 ↔ HQSW3 E0/0 link dropping frames. Lost BPDUs caused RSTP to repeatedly reconverge VLAN 99.
+ - **Fix**: Bouncing the ports didn’t help. Deleting and recreating the link in CML fixed it.
+ - **Lesson**: Verify STP per VLAN, not just one. BPDU sent/received counters reveal one-way loss. In production, UDLD and Loop Guard protect against this failure.
