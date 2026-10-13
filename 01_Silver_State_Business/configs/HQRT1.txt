@@ -1,9 +1,9 @@
 HQRT1#show run
 Building configuration...
 
-Current configuration : 3024 bytes
+Current configuration : 5521 bytes
 !
-! Last configuration change at 02:29:45 UTC Tue Oct 13 2026
+! Last configuration change at 22:10:16 UTC Tue Oct 13 2026
 !
 version 17.16
 service timestamps debug datetime msec
@@ -73,7 +73,43 @@ no ipv6 cef
 !
 !
 !
+crypto pki trustpoint TP-self-signed-131184650
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-131184650
+ revocation-check none
+ rsakeypair TP-self-signed-131184650
+ hash sha512
 !
+!
+crypto pki certificate chain TP-self-signed-131184650
+ certificate self-signed 01
+  3082032E 30820216 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  30312E30 2C060355 04030C25 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31333131 38343635 30301E17 0D323631 30313332 31333232 
+  355A170D 33363130 31323231 33323235 5A303031 2E302C06 03550403 0C25494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3133 31313834 
+  36353030 82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 
+  82010100 C3FEF4F9 908F9C6E DEB5DAD2 218AEBAE FB1496F4 46C10764 DD6082ED 
+  7C21D3C1 AF6A3B3F 0D99CCD1 AF29E340 A10C0771 C4597D41 4ACB6850 F51FAE34 
+  87C7FA92 F4EFFCA4 E214457F DEABBB19 CACD85FF FE542C2E 2830A496 2E997619 
+  F1BE596E 01B05E6E 7B55C130 7EFF0E59 453899FD B987A0F2 5275F5F6 92033BA3 
+  CD6AF2CC 4DEEAFF5 01CA3A57 B9F83F75 D6CC7FC2 BFCAD0AC 85D0E576 FBEECA7A 
+  85C0B039 2C9EF309 E7320563 C7DF4A78 01CFDC91 172CE3FF D0A2F114 7A3FB29A 
+  36E999E9 F0EAC8C7 430DE478 0F82023E 4A9CA979 D1A2370D F070D413 05200E2A 
+  A0F88B83 9B6AB776 763758EC 19D8B2FB 6F33877B 1E8E90F6 FC0B75D5 E68B3C3F 
+  93942E07 02030100 01A35330 51301D06 03551D0E 04160414 C13F2B71 0AADAB20 
+  D9E9C344 54DBC698 1FE391C2 301F0603 551D2304 18301680 14C13F2B 710AADAB 
+  20D9E9C3 4454DBC6 981FE391 C2300F06 03551D13 0101FF04 05300301 01FF300D 
+  06092A86 4886F70D 01010D05 00038201 01004814 ED63CE02 D3535C8B EF6A54AB 
+  2AA44165 8AB291EF 24B8943D 72C2ED05 FC3985CB 70AABFE5 8898DFF8 CA9AA5FD 
+  D899F9C3 EDB6DAC5 72A4278D E9E518A6 0F5F8B2A FEE7E0D8 34BCC5BA 41B3D77A 
+  88F14D55 CB6CA778 5E726F1F DBDEB160 68DF5C32 5D8E996E A70C2C0B 8048E499 
+  14A634D5 20D0B6F3 0F53E991 B940FBBE 5E2EE330 1052B51D 9F92A16D 5BE137C3 
+  49B029AC 3669CC68 67F67FAB 94C09400 64C560F7 73C19851 E3471001 FEB1A836 
+  A4599C61 405C9579 281B3BEB 6DD36DA1 7EE8686F 958E8B64 458B7F5F 3E694BD9 
+  5C3D5AA3 0E258177 1A1713CA E496FF2D 401AECDE DB52AA9C EA42DE8A 68BEBC7A 
+  D3A7A837 EBB23AB1 309D707F C60FBD65 E1B3
+        quit
 !
 !
 memory free low-watermark processor 79983
@@ -91,22 +127,22 @@ username networkadmin privilege 15 secret 9 $9$AYH8AYwmw5nf1.$R7FE/fKNQgPiRiifbS
 ! 
 !
 !
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 !         
 !
 !
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
 interface Ethernet0/0
- no ip address
- shutdown
+ ip address 203.0.113.10 255.255.255.252
+ ip nat outside
 !
 interface Ethernet0/1
  no ip address
@@ -114,27 +150,33 @@ interface Ethernet0/1
 interface Ethernet0/1.10
  encapsulation dot1Q 10
  ip address 10.10.10.1 255.255.255.0
-!         
+ ip nat inside
+!
 interface Ethernet0/1.20
  encapsulation dot1Q 20
  ip address 10.10.20.1 255.255.255.0
+ ip nat inside
 !
 interface Ethernet0/1.30
  encapsulation dot1Q 30
  ip address 10.10.30.1 255.255.255.0
+ ip nat inside
 !
 interface Ethernet0/1.40
  encapsulation dot1Q 40
  ip address 10.10.40.1 255.255.255.0
+ ip nat inside
 !
 interface Ethernet0/1.50
  encapsulation dot1Q 50
  ip address 10.10.50.1 255.255.255.0
+ ip nat inside
  ip access-group SRVR-ACL out
 !
 interface Ethernet0/1.99
  encapsulation dot1Q 99
  ip address 10.10.99.1 255.255.255.0
+ ip nat inside
  ip access-group MTGMT-ACL out
 !
 interface Ethernet0/2
@@ -151,7 +193,12 @@ ip forward-protocol udp
 !
 ip http server
 ip http secure-server
+ip nat inside source list NAT-HQ interface Ethernet0/0 overload
+ip route 0.0.0.0 0.0.0.0 203.0.113.9
 ip ssh bulk-mode 131072
+!
+ip access-list standard NAT-HQ
+ 10 permit 10.10.0.0 0.0.255.255
 !
 ip access-list extended MTGMT-ACL
  10 permit ip 10.10.40.0 0.0.0.255 10.10.99.0 0.0.0.255
@@ -182,7 +229,6 @@ line vty 0 4
  transport input ssh
 !
 !
-!
 !         
+!
 end
-
