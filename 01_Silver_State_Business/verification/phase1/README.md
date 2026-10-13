@@ -1,9 +1,60 @@
 # Verification
 ## Layer 2 verification 
 ### HQRT1
-
-
-
+```bash
+HQRT1#show ip int bri
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            unassigned      YES TFTP   administratively down down    
+Ethernet0/1            unassigned      YES TFTP   up                    up      
+Ethernet0/1.10         10.10.10.1      YES manual up                    up      
+Ethernet0/1.20         10.10.20.1      YES manual up                    up      
+Ethernet0/1.30         10.10.30.1      YES manual up                    up      
+Ethernet0/1.40         10.10.40.1      YES manual up                    up      
+Ethernet0/1.50         10.10.50.1      YES manual up                    up      
+Ethernet0/1.99         10.10.99.1      YES manual up                    up      
+Ethernet0/2            unassigned      YES TFTP   administratively down down    
+Ethernet0/3            unassigned      YES TFTP   administratively down down 
+```
+``` bash
+HQRT1#show ip int bri
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            unassigned      YES TFTP   administratively down down    
+Ethernet0/1            unassigned      YES TFTP   up                    up      
+Ethernet0/1.10         10.10.10.1      YES manual up                    up      
+Ethernet0/1.20         10.10.20.1      YES manual up                    up      
+Ethernet0/1.30         10.10.30.1      YES manual up                    up      
+Ethernet0/1.40         10.10.40.1      YES manual up                    up      
+Ethernet0/1.50         10.10.50.1      YES manual up                    up      
+Ethernet0/1.99         10.10.99.1      YES manual up                    up      
+Ethernet0/2            unassigned      YES TFTP   administratively down down    
+Ethernet0/3            unassigned      YES TFTP   administratively down down
+```
+```bash
+HQRT1#show ip int bri
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            unassigned      YES TFTP   administratively down down    
+Ethernet0/1            unassigned      YES TFTP   up                    up      
+Ethernet0/1.10         10.10.10.1      YES manual up                    up      
+Ethernet0/1.20         10.10.20.1      YES manual up                    up      
+Ethernet0/1.30         10.10.30.1      YES manual up                    up      
+Ethernet0/1.40         10.10.40.1      YES manual up                    up      
+Ethernet0/1.50         10.10.50.1      YES manual up                    up      
+Ethernet0/1.99         10.10.99.1      YES manual up                    up      
+Ethernet0/2            unassigned      YES TFTP   administratively down down    
+Ethernet0/3            unassigned      YES TFTP   administratively down down
+```
+```bash
+HQRT1(config)#do show access-list 
+Extended IP access list MTGMT-ACL
+    10 permit ip 10.10.40.0 0.0.0.255 10.10.99.0 0.0.0.255
+    20 deny ip any 10.10.99.0 0.0.0.255
+Extended IP access list SRVR-ACL
+    10 permit udp any host 10.10.50.10 eq domain
+    20 permit tcp any host 10.10.50.10 eq domain
+    30 permit tcp any host 10.10.50.10 eq 443
+    40 permit udp host 8.8.8.8 eq domain host 10.10.50.10
+    50 deny ip any 10.10.50.0 0.0.0.255 log
+```
 ### HQSW1
 ```bash
 HQSW1#show int trunk   
@@ -190,4 +241,17 @@ Interface           Role Sts Cost      Prio.Nbr Type
 Et0/0               Root FWD 100       128.1    P2p 
 Et0/1               Altn BLK 100       128.2    P2p 
 Et0/2               Desg FWD 100       128.3    P2p
+```
+### HQRT1 is issuing DHCP
+```bash
+HQRT1#show ip dhcp binding 
+Bindings from all pools not associated with VRF:
+IP address      Client-ID/              Lease expiration        Type       State      Interface
+                Hardware address/
+                User name
+10.10.10.21     0152.5400.edbe.2a       Oct 14 2026 01:46 AM    Automatic  Active     Ethernet0/1.10
+10.10.20.21     0152.5400.5bab.93       Oct 14 2026 01:46 AM    Automatic  Active     Ethernet0/1.20
+10.10.30.21     0152.5400.2646.d9       Oct 14 2026 01:46 AM    Automatic  Active     Ethernet0/1.30
+10.10.40.21     0152.5400.4bfd.dc       Oct 14 2026 01:41 AM    Automatic  Active     Ethernet0/1.40
+HQRT1#
 ```
