@@ -23,6 +23,6 @@ Record problems as you hit them. Format: **Symptom → Cause → Fix → What I'
  - **Lesson**: Verify STP per VLAN, not just one. BPDU sent/received counters reveal one-way loss. In production, UDLD and Loop Guard protect against this failure.
 
 ## Route of Last Resort Missing
- -**Symptom**: ip route 0.0.0.0 0.0.0.0 203.0.113.9 configured, but “Gateway of last resort is not set.”
- -**Cause**: E0/0 IP or mask misconfigured, so 203.0.113.9 wasn’t in a connected subnet.
- -**Lesson**: IOS only installs a static route when its next hop is reachable. If a static route is missing from show ip route, check the next hop first (show ip route <next-hop>).
+ - **Symptom**: ip route 0.0.0.0 0.0.0.0 203.0.113.9 configured, but “Gateway of last resort is not set.”
+ - **Cause**: E0/0 IP or mask misconfigured, so 203.0.113.9 wasn’t in a connected subnet.
+ - **Lesson**: IOS only installs a static route when its next hop is reachable. If a static route is missing from show ip route, check the next hop first (show ip route <next-hop>).
