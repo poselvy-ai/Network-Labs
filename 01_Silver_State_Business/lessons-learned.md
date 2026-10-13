@@ -21,3 +21,8 @@ Record problems as you hit them. Format: **Symptom → Cause → Fix → What I'
  - **Cause**: Faulty HQSW1 E0/2 ↔ HQSW3 E0/0 link dropping frames. Lost BPDUs caused RSTP to repeatedly reconverge VLAN 99.
  - **Fix**: Bouncing the ports didn’t help. Deleting and recreating the link in CML fixed it.
  - **Lesson**: Verify STP per VLAN, not just one. BPDU sent/received counters reveal one-way loss. In production, UDLD and Loop Guard protect against this failure.
+
+## Route of Last Resort Missing
+ -**Symptom**: ip route 0.0.0.0 0.0.0.0 203.0.113.9 configured, but “Gateway of last resort is not set.”
+ -**Cause**: E0/0 IP or mask misconfigured, so 203.0.113.9 wasn’t in a connected subnet.
+ -**Lesson**: IOS only installs a static route when its next hop is reachable. If a static route is missing from show ip route, check the next hop first (show ip route <next-hop>).
