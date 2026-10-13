@@ -54,15 +54,23 @@ Et0/2          10,20,30,40,50,99
 ```bash
 HQSW1#show spanning-tree br
 
-                                                   Hello  Max  Fwd
-Vlan                         Bridge ID              Time  Age  Dly  Protocol
----------------- --------------------------------- -----  ---  ---  --------
-VLAN0010          4106 ( 4096,  10) aabb.cc00.0b00    2    20   15  rstp        
-VLAN0020          4116 ( 4096,  20) aabb.cc00.0b00    2    20   15  rstp        
-VLAN0030          4126 ( 4096,  30) aabb.cc00.0b00    2    20   15  rstp        
-VLAN0040          4136 ( 4096,  40) aabb.cc00.0b00    2    20   15  rstp        
-VLAN0050          4146 ( 4096,  50) aabb.cc00.0b00    2    20   15  rstp        
-VLAN0099          4195 ( 4096,  99) aabb.cc00.0b00    2    20   15  rstp       
+VLAN0010
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    4106
+             Address     aabb.cc00.0b00
+             This bridge is the root
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    4106   (priority 4096 sys-id-ext 10)
+             Address     aabb.cc00.0b00
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Et0/0               Desg FWD 100       128.1    P2p 
+Et0/1               Desg FWD 100       128.2    P2p 
+Et0/2               Desg FWD 100       128.3    P2p       
 ```
 ### HWSW2
 ```bash
