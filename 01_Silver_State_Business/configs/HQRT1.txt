@@ -1,0 +1,188 @@
+HQRT1#show run
+Building configuration...
+
+Current configuration : 3024 bytes
+!
+! Last configuration change at 02:29:45 UTC Tue Oct 13 2026
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname HQRT1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+ip dhcp excluded-address 10.10.10.1 10.10.10.20
+ip dhcp excluded-address 10.10.20.1 10.10.20.20
+ip dhcp excluded-address 10.10.30.1 10.10.30.20
+ip dhcp excluded-address 10.10.40.1 10.10.40.20
+ip dhcp excluded-address 10.10.99.1 10.10.99.254
+ip dhcp excluded-address 10.10.50.1 10.10.50.254
+!
+ip dhcp pool CORP
+ network 10.10.10.0 255.255.255.0
+ default-router 10.10.10.1 
+ dns-server 10.10.50.10 
+ domain-name ssbs.internal
+!
+ip dhcp pool SALES
+ network 10.10.20.0 255.255.255.0
+ default-router 10.10.20.1 
+ dns-server 10.10.50.10 
+ domain-name ssbs.internal
+!
+ip dhcp pool ENG
+ network 10.10.30.0 255.255.255.0
+ default-router 10.10.30.1 
+ dns-server 10.10.50.10 
+ domain-name ssbs.internal
+!
+ip dhcp pool IT
+ network 10.10.40.0 255.255.255.0
+ default-router 10.10.40.1 
+ dns-server 10.10.50.10 
+ domain-name ssbs.internal
+!
+!
+!
+ip domain name ssbs.internal
+ip cef
+login on-success log
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+memory free low-watermark processor 79983
+!
+!
+spanning-tree mode rapid-pvst
+!
+!
+username networkadmin privilege 15 secret 9 $9$AYH8AYwmw5nf1.$R7FE/fKNQgPiRiifbS6hoVDzEjWideC57xfSe2aVJDw
+!
+!
+!
+!
+!
+! 
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+!
+interface Ethernet0/1
+ no ip address
+!
+interface Ethernet0/1.10
+ encapsulation dot1Q 10
+ ip address 10.10.10.1 255.255.255.0
+!         
+interface Ethernet0/1.20
+ encapsulation dot1Q 20
+ ip address 10.10.20.1 255.255.255.0
+!
+interface Ethernet0/1.30
+ encapsulation dot1Q 30
+ ip address 10.10.30.1 255.255.255.0
+!
+interface Ethernet0/1.40
+ encapsulation dot1Q 40
+ ip address 10.10.40.1 255.255.255.0
+!
+interface Ethernet0/1.50
+ encapsulation dot1Q 50
+ ip address 10.10.50.1 255.255.255.0
+ ip access-group SRVR-ACL out
+!
+interface Ethernet0/1.99
+ encapsulation dot1Q 99
+ ip address 10.10.99.1 255.255.255.0
+ ip access-group MTGMT-ACL out
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip http server
+ip http secure-server
+ip ssh bulk-mode 131072
+!
+ip access-list extended MTGMT-ACL
+ 10 permit ip 10.10.40.0 0.0.0.255 10.10.99.0 0.0.0.255
+ 20 deny ip any 10.10.99.0 0.0.0.255
+ remark Allows only the IT subnet to communicate with the MGMT subnet
+ip access-list extended SRVR-ACL
+ 10 remark DNS from anywhaer
+ 10 permit udp any host 10.10.50.10 eq domain
+ 20 permit tcp any host 10.10.50.10 eq domain
+ 30 remark web from anywhere 
+ 30 permit tcp any host 10.10.50.10 eq 443
+ 40 remark DNS repliest from the forwarder (SRV1 queries 8.8.8.8)
+ 40 permit udp host 8.8.8.8 eq domain host 10.10.50.10
+ 50 deny ip any 10.10.50.0 0.0.0.255 log
+no logging btrace
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+!         
+end
+
