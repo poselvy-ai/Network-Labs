@@ -1,0 +1,198 @@
+BRRT1#show run
+Building configuration...
+
+Current configuration : 4353 bytes
+!
+! Last configuration change at 23:00:21 UTC Wed Oct 14 2026
+!
+version 17.16
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname BRRT1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+ip dhcp excluded-address 10.20.10.1 10.20.10.20
+ip dhcp excluded-address 10.20.20.1 10.20.20.20
+ip dhcp excluded-address 10.20.30.1 10.20.30.20
+!
+ip dhcp pool CORP
+ network 10.20.10.0 255.255.255.0
+ default-router 10.20.10.1 
+ domain-name ssbs.internal
+ dns-server 10.10.50.10 8.8.8.8 
+!
+ip dhcp pool SALES
+ network 10.20.20.0 255.255.255.0
+ default-router 10.20.20.1 
+ dns-server 10.10.50.10 8.8.8.8 
+ domain-name ssbs.internal
+!
+ip dhcp pool ENG
+ network 10.20.30.0 255.255.255.0
+ default-router 10.20.30.1 
+ dns-server 10.10.50.10 8.8.8.8 
+ domain-name ssbs.internal
+!
+!
+!
+ip domain name ssbs.internal
+ip cef
+login on-success log
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-131184643
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-131184643
+ revocation-check none
+ rsakeypair TP-self-signed-131184643
+ hash sha512
+!
+!
+crypto pki certificate chain TP-self-signed-131184643
+ certificate self-signed 01
+  3082032E 30820216 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030 
+  30312E30 2C060355 04030C25 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31333131 38343634 33301E17 0D323631 30313432 32333032 
+  395A170D 33363130 31333232 33303239 5A303031 2E302C06 03550403 0C25494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3133 31313834 
+  36343330 82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02 
+  82010100 9317C0E7 34053225 CA93C9EF 5B5F4BC5 6E289DEE 14BD2D43 62EADD58 
+  A43B775B 1D5FED07 1D6C5DBB 6B33D92D 22C1377E BF8BA147 9F92383E F5854ADE 
+  20B6E193 CD99137F 13EBD486 6E500485 0AC9E673 2966EDAD 0AC5C8BD C0EAD3F3 
+  7245BD68 D6554353 FDE0462E CC8BAF4D 4B050E53 071C962A 16A400CC FFCEFB41 
+  6B6BA855 3B2D40A1 380819FB C427EF77 86798F88 6448048F A4580A14 92873A78 
+  D8C48B94 C2A442D3 F98D2EC9 1CF3DE62 F7E49734 4ACD2F5A 7935BA91 0A5B243C 
+  CFDA99C6 35CA4756 B371DFB6 9635C30E 4D510FD3 D58DFE55 954B96BC BE34AFC9 
+  B77E5526 25F83B96 8C3B34B7 00695A23 5FC4F7AC BC55510C 05FF85B4 05A9DAB9 
+  D52BF339 02030100 01A35330 51301D06 03551D0E 04160414 97C74B07 7A84282C 
+  0FB6A374 ECD99250 B54030B2 301F0603 551D2304 18301680 1497C74B 077A8428 
+  2C0FB6A3 74ECD992 50B54030 B2300F06 03551D13 0101FF04 05300301 01FF300D 
+  06092A86 4886F70D 01010D05 00038201 01001E08 54AE69B3 F00482C5 36F6FF61 
+  52969251 D96BAFA2 69641795 96747EF0 83B1CA05 325621C0 32EB71D5 8E3A3DF9 
+  4C4D70ED 3AF66C4F C0383B22 0EB150C1 D86B3530 211295E2 0C29D860 DA5257FD 
+  5D43E85D 7BE9C1F8 E66FBA4E 7D2CC001 D5399CC2 5FDF34DA ED015BE3 E7D5D891 
+  382DF3FE 1632C518 5731A51B 997CC357 FCBD1F2B AED699C7 36E9D9AA FEB43FA4 
+  DA6960AC 09114C77 2DBC9E90 015CE66F F50E1DF7 A631B737 94B13C6C A9E4934C 
+  988E84C1 F9EE1757 2460EBF6 CF1D7826 1FB273D6 2681B881 46963F21 DAB4DEB2 
+  4744EEDC 04B82D4C 7D822347 0EA46CBC 35100472 D94FE420 2F5CBA98 13C6A482 
+  4BEB3C69 718A7284 E770C102 D43DCBA6 593B
+        quit
+!
+!
+memory free low-watermark processor 79983
+!
+!
+spanning-tree mode rapid-pvst
+!
+!
+username networkadmin privilege 15 secret 9 $9$22jUlhz/LMUDPU$b8EhZMfEkFE/TBNQPAoohYKikPyV4JDjSrPMM4MHDas
+!
+!
+!
+!
+!         
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no ip address
+!
+interface Ethernet0/0.10
+ encapsulation dot1Q 10
+ ip address 10.20.10.1 255.255.255.0
+ ip nat inside
+!
+interface Ethernet0/0.20
+ encapsulation dot1Q 20
+ ip address 10.20.20.1 255.255.255.0
+ ip nat inside
+!
+interface Ethernet0/0.30
+ encapsulation dot1Q 30
+ ip address 10.20.30.1 255.255.255.0
+ ip nat inside
+!
+interface Ethernet0/0.99
+ encapsulation dot1Q 99
+ ip address 10.20.99.1 255.255.255.0
+ ip nat inside
+!
+interface Ethernet0/1
+ ip address 203.0.113.14 255.255.255.252
+ ip nat outside
+!
+interface Ethernet0/2
+ no ip address
+ shutdown 
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+ip forward-protocol udp
+!
+!
+ip http server
+ip http secure-server
+ip route 0.0.0.0 0.0.0.0 203.0.113.13
+ip ssh bulk-mode 131072
+!
+ip access-list standard NAT-BRANCH
+ 10 permit 10.20.0.0 0.0.255.255
+no logging btrace
+!
+!
+!
+control-plane
+!
+!         
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+!
+end
