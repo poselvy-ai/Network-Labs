@@ -1,9 +1,9 @@
 HQRT1#show run
 Building configuration...
 
-Current configuration : 5521 bytes
+Current configuration : 5609 bytes
 !
-! Last configuration change at 22:10:16 UTC Tue Oct 13 2026
+! Last configuration change at 00:53:24 UTC Wed Oct 14 2026
 !
 version 17.16
 service timestamps debug datetime msec
@@ -203,16 +203,19 @@ ip access-list standard NAT-HQ
 ip access-list extended MTGMT-ACL
  10 permit ip 10.10.40.0 0.0.0.255 10.10.99.0 0.0.0.255
  20 deny ip any 10.10.99.0 0.0.0.255
- remark Allows only the IT subnet to communicate with the MGMT subnet
+ 30 remark Allows only the IT subnet to communicate with the MGMT subnet
+ 30 permit ip any any
 ip access-list extended SRVR-ACL
- 10 remark DNS from anywhaer
+ 5 permit ip host 10.10.50.1 host 10.10.50.10
+ 10 remark Services on SRV1 (DD-08)
  10 permit udp any host 10.10.50.10 eq domain
  20 permit tcp any host 10.10.50.10 eq domain
- 30 remark web from anywhere 
- 30 permit tcp any host 10.10.50.10 eq 443
- 40 remark DNS repliest from the forwarder (SRV1 queries 8.8.8.8)
- 40 permit udp host 8.8.8.8 eq domain host 10.10.50.10
- 50 deny ip any 10.10.50.0 0.0.0.255 log
+ 30 permit tcp any host 10.10.50.10 eq www
+ 40 permit tcp any host 10.10.50.10 eq 443
+ 50 permit icmp any host 10.10.50.10
+ 60 permit udp host 8.8.8.8 eq domain host 10.10.50.10
+ 1000 deny ip any 10.10.50.0 0.0.0.255 log
+ 1010 permit ip any any
 no logging btrace
 !
 !
@@ -229,6 +232,6 @@ line vty 0 4
  transport input ssh
 !
 !
-!         
+!
 !
 end
