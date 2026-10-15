@@ -71,6 +71,12 @@ Entries are grouped by build area, roughly in the order they were hit during Pha
 - **Decision:** VLANs 50 and 99 are fully excluded from DHCP.
 - **Lesson:** IOS does **not** warn when a pool is created over an excluded range. The exclusion prevents **leases**, not configuration. Describe controls by what they actually do.
 
+### 4.3
+ - **Symptom**: Ip 10.20.0.1 could not reach IP 8.8.8.8
+ - **Cause**: Failed to activate the NAT *BRRT1(config)# ip nat inside source list NAT-BRANCH interface Ethernet0/1 overload*
+ - **Fix**: Implemented the *BRRT1(config)# ip nat inside source list NAT-BRANCH interface Ethernet0/1 overload*
+ - **Lesson**: When the NAT rule is not in place the *inside*,*outside*,and *ACL* that are needed for NAT/PAT will not work, as the binding does not take place.
+
 ---
 
 ## 5. SRV1 (Ubuntu) build
@@ -131,3 +137,4 @@ Entries are grouped by build area, roughly in the order they were hit during Pha
   - Zero matches on an explicit deny plus broken traffic points to the **implicit deny**.
   - Decode "impossible" log entries; they often reveal the mechanism.
   - Real hardware does not filter ARP with IP ACLs. This workaround would not be needed on IOSv or Catalyst 8000v.
+ 
