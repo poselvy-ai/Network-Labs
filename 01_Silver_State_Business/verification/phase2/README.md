@@ -36,6 +36,10 @@ Ethernet0/3            unassigned      YES NVRAM  administratively down down
 BRRT1#show access-list
 Standard IP access list NAT-BRANCH
     10 permit 10.20.0.0, wildcard bits 0.0.255.255
+Extended IP access list BR-MGMT-ACL
+    10 permit ip 10.10.40.0 0.0.0.255 10.20.99.0 0.0.0.255
+    20 deny ip any 10.20.99.0 0.0.0.255 log
+    30 permit ip any any
 ```
 ### DHCP
 #### DHCP Pools 
