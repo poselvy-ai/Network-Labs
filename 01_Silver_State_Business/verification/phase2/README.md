@@ -53,6 +53,25 @@ Extended IP access list BR-MGMT-ACL
     20 deny ip any 10.20.99.0 0.0.0.255 log
     30 permit ip any any
 ```
+### NAT Translation 
+```
+BRRT1#show ip nat stat 
+Total active translations: 1 (0 static, 1 dynamic; 1 extended)
+Outside interfaces:
+  Ethernet0/1
+Inside interfaces: 
+  Ethernet0/0.10, Ethernet0/0.20, Ethernet0/0.30, Ethernet0/0.99
+Hits: 808  Misses: 0
+CEF Translated packets: 803, CEF Punted packets: 0
+ Reserved port setting disabled provisioned no
+ Dynamic overload mapping configured: 1
+Expired translations: 3
+Dynamic mappings:
+-- Inside Source
+[Id: 1] access-list NAT-BRANCH interface Ethernet0/1 refcount 1
+nat-limit statistics:
+ max entry: max allowed 0, used 0, missed 0
+```
 ### DHCP
 #### DHCP Pools 
 ```bash
@@ -104,7 +123,7 @@ IP address      Client-ID/              Lease expiration        Type       State
 ```
 
 
-## BBSW1
+## BSW1
 ### Interfaces
 ```bash
 BRSW1#show ip int br   
@@ -113,7 +132,7 @@ Ethernet0/0            unassigned      YES unset  up                    up
 Ethernet0/1            unassigned      YES unset  up                    up      
 Ethernet0/2            unassigned      YES unset  up                    up      
 Ethernet0/3            unassigned      YES unset  up                    up      
-Vlan99                 10.20.99.11     YES manual administratively down down    
+Vlan99                 10.20.99.11     YES NVRAM  up                    up      
 ```
 ### VLANs
 ```bash
@@ -237,4 +256,10 @@ Interface           Role Sts Cost      Prio.Nbr Type
 Interface           Role Sts Cost      Prio.Nbr Type
 ------------------- ---- --- --------- -------- --------------------------------
 Et0/0               Desg FWD 100       128.1    P2p
+```
+## PC-BR-SALES
+### DHCP Address 
+```test
+eth0      Link encap:Ethernet  HWaddr 52:54:00:F1:9C:4F  
+          inet addr:10.20.20.21  Bcast:0.0.0.0  Mask:255.255.255.0
 ```
