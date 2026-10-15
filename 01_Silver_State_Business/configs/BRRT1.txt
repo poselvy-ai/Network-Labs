@@ -1,9 +1,9 @@
 BRRT1#show run
 Building configuration...
 
-Current configuration : 4353 bytes
+Current configuration : 4692 bytes
 !
-! Last configuration change at 23:00:21 UTC Wed Oct 14 2026
+! Last configuration change at 00:14:57 UTC Thu Oct 15 2026
 !
 version 17.16
 service timestamps debug datetime msec
@@ -153,6 +153,7 @@ interface Ethernet0/0.99
  encapsulation dot1Q 99
  ip address 10.20.99.1 255.255.255.0
  ip nat inside
+ ip access-group BR-MGMT-ACL out
 !
 interface Ethernet0/1
  ip address 203.0.113.14 255.255.255.252
@@ -160,7 +161,7 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  no ip address
- shutdown 
+ shutdown
 !
 interface Ethernet0/3
  no ip address
@@ -177,13 +178,20 @@ ip ssh bulk-mode 131072
 !
 ip access-list standard NAT-BRANCH
  10 permit 10.20.0.0 0.0.255.255
+!
+ip access-list extended BR-MGMT-ACL
+ 10 remark Only HQ IT may reach branch switch management (DD-08)
+ 10 permit ip 10.10.40.0 0.0.0.255 10.20.99.0 0.0.0.255
+ 20 deny ip any 10.20.99.0 0.0.0.255 log
+ 30 remark IOL Quirk: Egress ACL misparses ARP as IP; prmit non-subnet destinations
+ 30 permit ip any any
 no logging btrace
 !
 !
 !
 control-plane
 !
-!         
+!
 !
 line con 0
  logging synchronous
