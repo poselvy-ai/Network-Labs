@@ -1,9 +1,9 @@
 BRRT1#show run
 Building configuration...
 
-Current configuration : 4692 bytes
+Current configuration : 4760 bytes
 !
-! Last configuration change at 00:14:57 UTC Thu Oct 15 2026
+! Last configuration change at 01:11:14 UTC Thu Oct 15 2026
 !
 version 17.16
 service timestamps debug datetime msec
@@ -173,6 +173,7 @@ ip forward-protocol udp
 !
 ip http server
 ip http secure-server
+ip nat inside source list NAT-BRANCH interface Ethernet0/1 overload
 ip route 0.0.0.0 0.0.0.0 203.0.113.13
 ip ssh bulk-mode 131072
 !
