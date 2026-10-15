@@ -1,4 +1,16 @@
 # Verification Phase 2 Branch
+## ISP 
+### IP ROUTE
+```bash
+      8.0.0.0/32 is subnetted, 1 subnets
+C        8.8.8.8 is directly connected, Loopback0
+      203.0.113.0/24 is variably subnetted, 4 subnets, 2 masks
+C        203.0.113.8/30 is directly connected, Ethernet0/0
+L        203.0.113.9/32 is directly connected, Ethernet0/0
+C        203.0.113.12/30 is directly connected, Ethernet0/1
+L        203.0.113.13/32 is directly connected, Ethernet0/1
+```
+
 ## BRRT1
 ### IP ROUTE
 ```bash
