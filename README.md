@@ -8,7 +8,7 @@ Hands-on network engineering labs built in **Cisco Modeling Labs (CML)**. Each l
 
 | # | Lab | Skills demonstrated | Status |
 |---|-----|---------------------|--------|
-| 1 | [Silver State Business Solutions](./01-silver-state-business/README.md) | VLANs, 802.1Q trunking, Rapid PVST+, router-on-a-stick, DHCP, DNS, PAT, IKEv2 route-based VPN, OSPF | In progress |
+| 1 | [Silver State Business Solutions](./01_Silver_State_Business/README.md) | VLANs, 802.1Q trunking, Rapid PVST+, router-on-a-stick, DHCP, DNS, PAT, IKEv2 route-based VPN, OSPF | In progress |
 
 ## How each lab is organized
 
