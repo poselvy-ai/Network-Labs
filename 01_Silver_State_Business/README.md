@@ -57,9 +57,9 @@ Five nodes of headroom for later phases (a second server, a firewall, a second I
 
 | Phase | Scope | Status |
 |-------|-------|--------|
-| 1 | [HQ: VLANs, trunks, STP, inter-VLAN routing, DHCP, DNS, PAT](./phases/01-hq.md) | Complete |
-| 2 | [Branch: VLANs, inter-VLAN routing, local DHCP, PAT](./phases/02-branch.md) | Complete |
-| 3 | [Site-to-site VPN + OSPF](./phases/03-vpn.md) | Not started |
+| 1 | [HQ: VLANs, trunks, STP, inter-VLAN routing, DHCP, DNS, PAT](./phase/01-hq.md) | Complete |
+| 2 | [Branch: VLANs, inter-VLAN routing, local DHCP, PAT](./phase/02-branch.md) | Complete |
+| 3 | [Site-to-site VPN + OSPF](./phase/03-vpn.md) | Not started |
 
 ## Device configs
 
