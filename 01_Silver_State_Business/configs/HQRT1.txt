@@ -1,9 +1,9 @@
 HQRT1#show run
 Building configuration...
 
-Current configuration : 5609 bytes
+Current configuration : 6663 bytes
 !
-! Last configuration change at 00:53:24 UTC Wed Oct 14 2026
+! Last configuration change at 20:35:08 UTC Sat Oct 17 2026
 !
 version 17.16
 service timestamps debug datetime msec
@@ -120,7 +120,27 @@ spanning-tree mode rapid-pvst
 !
 username networkadmin privilege 15 secret 9 $9$AYH8AYwmw5nf1.$R7FE/fKNQgPiRiifbS6hoVDzEjWideC57xfSe2aVJDw
 !
+crypto ikev2 proposal SSB-IKEV2-PROP 
+ encryption aes-cbc-256
+ integrity sha256
+ group 14
 !
+crypto ikev2 policy SSB-IKEV2-POL 
+ proposal SSB-IKEV2-PROP
+!
+crypto ikev2 keyring SSB-KEYRING
+ peer BRRT1
+  address 203.0.113.14
+  pre-shared-key cisco
+ !
+!
+!
+crypto ikev2 profile SSB-IKEV2-PROF
+ match identity remote address 203.0.113.14 255.255.255.255 
+ identity local address 203.0.113.10
+ authentication remote pre-share
+ authentication local pre-share
+ keyring local SSB-KEYRING
 !
 !
 !
@@ -133,12 +153,28 @@ username networkadmin privilege 15 secret 9 $9$AYH8AYwmw5nf1.$R7FE/fKNQgPiRiifbS
 !
 !
 !
+crypto ipsec transform-set SSB-TS esp-aes 256 esp-sha256-hmac 
+ mode tunnel
 !
-!
-!
+crypto ipsec profile SSB-IPSEC-PROF
+ set transform-set SSB-TS 
+ set ikev2-profile SSB-IKEV2-PROF
 !
 !         
 !
+!
+!
+!
+!
+!
+interface Tunnel10
+ description VPN to HQRT1
+ ip address 172.31.0.1 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/0
+ tunnel destination 203.0.113.14
+ tunnel protection ipsec profile SSB-IPSEC-PROF
 !
 interface Ethernet0/0
  ip address 203.0.113.10 255.255.255.252
@@ -187,6 +223,13 @@ interface Ethernet0/3
  no ip address
  shutdown
 !
+router ospf 1
+ router-id 10.10.255.1
+ passive-interface default
+ no passive-interface Tunnel10
+ network 10.10.0.0 0.0.255.255 area 0
+ network 172.31.0.0 0.0.0.3 area 0
+!         
 ip forward-protocol nd
 ip forward-protocol udp
 !
@@ -232,6 +275,6 @@ line vty 0 4
  transport input ssh
 !
 !
-!
+!         
 !
 end
