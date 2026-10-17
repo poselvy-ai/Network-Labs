@@ -1,9 +1,9 @@
 HQSW1#show run
 Building configuration...
 
-Current configuration : 3992 bytes
+Current configuration : 4028 bytes
 !
-! Last configuration change at 23:49:00 UTC Mon Oct 12 2026
+! Last configuration change at 21:57:14 UTC Sat Oct 17 2026
 !
 version 17.16
 service timestamps debug datetime msec
@@ -19,7 +19,7 @@ no aaa new-model
 !
 !
 !
-!
+no ip routing
 !
 !
 !
@@ -29,10 +29,11 @@ no aaa new-model
 !
 !
 !
+!
 ip audit notify log
 ip audit po max-events 100
 ip domain name ssbs.internal
-ip cef
+no ip cef
 login on-success log
 no ipv6 cef
 !
@@ -143,6 +144,7 @@ interface Ethernet0/3
 !
 interface Vlan99
  ip address 10.10.99.11 255.255.255.0
+ no ip route-cache
 !
 ip forward-protocol nd
 ip forward-protocol udp
@@ -159,7 +161,7 @@ no logging btrace
 control-plane
 !
 !
-!
+!         
 line con 0
  logging synchronous
 line aux 0
