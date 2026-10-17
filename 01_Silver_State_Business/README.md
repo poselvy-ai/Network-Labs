@@ -65,13 +65,13 @@ Five nodes of headroom for later phases (a second server, a firewall, a second I
 
 | Device | Role | Config |
 |--------|------|--------|
-| ISP1 | Simulated ISP + internet | [ISP1.cfg](./configs/ISP1.cfg) |
-| HQRT1 | HQ edge router | [HQRT1.cfg](./configs/HQRT1.cfg) |
-| HQSW1 | HQ switch, STP root | [HQSW1.cfg](./configs/HQSW1.cfg) |
-| HQSW2 | HQ switch, server access | [HQSW2.cfg](./configs/HQSW2.cfg) |
-| HQSW3 | HQ switch, user access | [HQSW3.cfg](./configs/HQSW3.cfg) |
-| BRRT1 | Branch edge router | [BRRT1.cfg](./configs/BRRT1.cfg) |
-| BRSW1 | Branch switch | [BRSW1.cfg](./configs/BRSW1.cfg) |
+| ISP1 | Simulated ISP + internet | [ISP1.cfg](./configs/ISP1.txt) |
+| HQRT1 | HQ edge router | [HQRT1.cfg](./configs/HQRT1.txt) |
+| HQSW1 | HQ switch, STP root | [HQSW1.cfg](./configs/HQSW1.txt) |
+| HQSW2 | HQ switch, server access | [HQSW2.cfg](./configs/HQSW2.txt) |
+| HQSW3 | HQ switch, user access | [HQSW3.cfg](./configs/HQSW3.txt) |
+| BRRT1 | Branch edge router | [BRRT1.cfg](./configs/BRRT1.txt) |
+| BRSW1 | Branch switch | [BRSW1.cfg](./configs/BRSW1.txt) |
 | SRV1 | DNS + web server (Ubuntu) | [SRV1-setup.md](./configs/SRV1-setup.md) |
 
 ## [Lessons learned](./lessons-learned.md)
