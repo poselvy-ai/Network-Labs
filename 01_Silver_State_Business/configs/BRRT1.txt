@@ -1,9 +1,10 @@
+BRRT1>en
 BRRT1#show run
 Building configuration...
 
-Current configuration : 4760 bytes
+Current configuration : 5864 bytes
 !
-! Last configuration change at 01:11:14 UTC Thu Oct 15 2026
+! Last configuration change at 21:18:41 UTC Sat Oct 17 2026
 !
 version 17.16
 service timestamps debug datetime msec
@@ -111,12 +112,45 @@ spanning-tree mode rapid-pvst
 !
 username networkadmin privilege 15 secret 9 $9$22jUlhz/LMUDPU$b8EhZMfEkFE/TBNQPAoohYKikPyV4JDjSrPMM4MHDas
 !
+crypto ikev2 proposal SSB-IKEV2-PROP 
+ encryption aes-cbc-256
+ integrity sha256
+ group 14 
+!
+crypto ikev2 policy SSB-IKEV2-POL 
+ proposal SSB-IKEV2-PROP
+!
+crypto ikev2 keyring SSB-KEYRING
+ peer HQRT1
+  address 203.0.113.10
+  pre-shared-key cisco
+ !
+!
+!
+crypto ikev2 profile SSB-IKEV2-PROF
+ match identity remote address 203.0.113.10 255.255.255.255 
+ identity local address 203.0.113.14
+ authentication remote pre-share
+ authentication local pre-share
+ keyring local SSB-KEYRING
 !
 !
 !
-!         
 ! 
 !
+!         
+!
+!
+!
+!
+!
+!
+crypto ipsec transform-set SSB-TS esp-aes 256 esp-sha256-hmac 
+ mode tunnel
+!
+crypto ipsec profile SSB-IPSEC-PROF
+ set transform-set SSB-TS 
+ set ikev2-profile SSB-IKEV2-PROF
 !
 !
 !
@@ -125,11 +159,14 @@ username networkadmin privilege 15 secret 9 $9$22jUlhz/LMUDPU$b8EhZMfEkFE/TBNQPA
 !
 !
 !
-!
-!
-!
-!
-!
+interface Tunnel10
+ description VPN to HQRT1
+ ip address 172.31.0.2 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/1
+ tunnel destination 203.0.113.10
+ tunnel protection ipsec profile SSB-IPSEC-PROF
 !
 interface Ethernet0/0
  no ip address
@@ -167,6 +204,13 @@ interface Ethernet0/3
  no ip address
  shutdown
 !
+router ospf 1
+ router-id 10.20.255.1
+ passive-interface default
+ no passive-interface Tunnel10
+ network 10.20.0.0 0.0.255.255 area 0
+ network 172.31.0.0 0.0.0.3 area 0
+!
 ip forward-protocol nd
 ip forward-protocol udp
 !
@@ -181,6 +225,7 @@ ip access-list standard NAT-BRANCH
  10 permit 10.20.0.0 0.0.255.255
 !
 ip access-list extended BR-MGMT-ACL
+ 5 permit ip host 10.20.99.1 10.20.99.0 0.0.0.255
  10 remark Only HQ IT may reach branch switch management (DD-08)
  10 permit ip 10.10.40.0 0.0.0.255 10.20.99.0 0.0.0.255
  20 deny ip any 10.20.99.0 0.0.0.255 log
