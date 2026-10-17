@@ -1,8 +1,7 @@
-```bash
+```text
 BRRT1>en
 BRRT1#show run
 Building configuration...
-
 Current configuration : 5864 bytes
 !
 ! Last configuration change at 21:18:41 UTC Sat Oct 17 2026
