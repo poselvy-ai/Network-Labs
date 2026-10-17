@@ -1,4 +1,3 @@
-```text
 BRRT1>en
 BRRT1#show run
 Building configuration...
@@ -250,6 +249,3 @@ line vty 0 4
 !
 !
 end
-```
-
-[BACK](../README.md)
