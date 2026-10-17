@@ -114,7 +114,67 @@ Tunnel-id Local                 Remote                fvrf/ivrf            Statu
       Life/Active Time: 86400/1415 sec
       CE id: 1034, Session-id: 32
       Local spi: 2FED647870D4A78F       Remote spi: C3D93A6A42ACE2F4
-
- IPv6 Crypto IKEv2  SA 
 ```
+
+## OSPF 
+### HQRT1
+#### Neighbor 
+```
+HQRT1#show ip ospf neighbor 
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.20.255.1       0   FULL/  -        00:00:31    172.31.0.2      Tunnel10
+```
+### Interface sourced by OSPF
+```bash
+HQRT1#show ip route ospf     
+
+Gateway of last resort is 203.0.113.9 to network 0.0.0.0
+
+      10.0.0.0/8 is variably subnetted, 16 subnets, 2 masks
+O        10.20.10.0/24 [110/1010] via 172.31.0.2, 00:02:03, Tunnel10
+O        10.20.20.0/24 [110/1010] via 172.31.0.2, 00:02:03, Tunnel10
+O        10.20.30.0/24 [110/1010] via 172.31.0.2, 00:02:03, Tunnel10
+O        10.20.99.0/24 [110/1010] via 172.31.0.2, 00:02:03, Tunnel10
+```
+#### OSPF Route
+```bash
+HQRT1#show ip route ospf
+
+Gateway of last resort is 203.0.113.9 to network 0.0.0.0
+```
+## BRRT1
+#### Neighbor 
+```bash
+BRRT1#show ip ospf neighbor 
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.10.255.1       0   FULL/  -        00:00:30    172.31.0.1      Tunnel10
+```
+### Interface sourced by OSPF
+```bash
+BRRT1#show ip ospf int br
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Et0/0.99     1     0               10.20.99.1/24      10    WAIT  0/0
+Et0/0.30     1     0               10.20.30.1/24      10    WAIT  0/0
+Et0/0.20     1     0               10.20.20.1/24      10    WAIT  0/0
+Et0/0.10     1     0               10.20.10.1/24      10    WAIT  0/0
+Tu10         1     0               172.31.0.2/30      1000  P2P   1/1
+```
+#### OSPF Route
+```bash
+BRRT1#show ip route ospf
+
+Gateway of last resort is 203.0.113.13 to network 0.0.0.0
+
+      10.0.0.0/8 is variably subnetted, 14 subnets, 2 masks
+O        10.10.10.0/24 [110/1010] via 172.31.0.1, 00:23:11, Tunnel10
+O        10.10.20.0/24 [110/1010] via 172.31.0.1, 00:23:11, Tunnel10
+O        10.10.30.0/24 [110/1010] via 172.31.0.1, 00:23:11, Tunnel10
+O        10.10.40.0/24 [110/1010] via 172.31.0.1, 00:23:11, Tunnel10
+O        10.10.50.0/24 [110/1010] via 172.31.0.1, 00:23:11, Tunnel10
+O        10.10.99.0/24 [110/1010] via 172.31.0.1, 00:23:11, Tunnel10
+```
+[BACK](../README.md)
+
 
