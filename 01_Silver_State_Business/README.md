@@ -27,10 +27,10 @@ Silver State Business Solutions is a professional-services company opening a new
 ## Topology
 
 ### Physical Topology 
-![Physical Topology](./design/diamgrams/SSB_Phyiscal_Network_Diagram.png)
+![Physical Topology](./design/diagrams/SSB_Physical_Network_Diagram.png)
 
 ### Logical Topology 
-![Logical Topology](./design/diamgrams/SSB_Logical_Diagram.png)
+![Logical Topology](./design/diagrams/SSB_Logical_Diagram.png)
 
 ## Design summary
 
@@ -59,19 +59,19 @@ Five nodes of headroom for later phases (a second server, a firewall, a second I
 |-------|-------|--------|
 | 1 | [HQ: VLANs, trunks, STP, inter-VLAN routing, DHCP, DNS, PAT](./phase/01-hq.md) | Complete |
 | 2 | [Branch: VLANs, inter-VLAN routing, local DHCP, PAT](./phase/02-branch.md) | Complete |
-| 3 | [WAN:Site-to-site VPN + OSPF](./phase/03-WAN.md) | In Progress |
+| 3 | [WAN: site-to-site IKEv2/IPsec VPN + OSPF](./phase/03-WAN.md) | Complete |
 
 ## Device configs
 
 | Device | Role | Config |
 |--------|------|--------|
-| ISP1 | Simulated ISP + internet | [ISP1.cfg](./configs/ISP1.txt) |
-| HQRT1 | HQ edge router | [HQRT1.cfg](./configs/HQRT1.txt) |
-| HQSW1 | HQ switch, STP root | [HQSW1.cfg](./configs/HQSW1.txt) |
-| HQSW2 | HQ switch, server access | [HQSW2.cfg](./configs/HQSW2.txt) |
-| HQSW3 | HQ switch, user access | [HQSW3.cfg](./configs/HQSW3.txt) |
-| BRRT1 | Branch edge router | [BRRT1.cfg](./configs/BRRT1.txt) |
-| BRSW1 | Branch switch | [BRSW1.cfg](./configs/BRSW1.txt) |
+| ISP1 | Simulated ISP + internet | [ISP1.txt](./configs/ISP1.txt) |
+| HQRT1 | HQ edge router | [HQRT1.txt](./configs/HQRT1.txt) |
+| HQSW1 | HQ switch, STP root | [HQSW1.txt](./configs/HQSW1.txt) |
+| HQSW2 | HQ switch, server access | [HQSW2.txt](./configs/HQSW2.txt) |
+| HQSW3 | HQ switch, user access | [HQSW3.txt](./configs/HQSW3.txt) |
+| BRRT1 | Branch edge router | [BRRT1.txt](./configs/BRRT1.txt) |
+| BRSW1 | Branch switch | [BRSW1.txt](./configs/BRSW1.txt) |
 | SRV1 | DNS + web server (Ubuntu) | [SRV1-setup.md](./configs/SRV1-setup.md) |
 
 ## [Lessons learned](./lessons-learned.md)

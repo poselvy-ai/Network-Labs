@@ -7,7 +7,7 @@
 |------|----------|-------|
 | HQ | 10.10.0.0/16 | One summary route describes all of HQ |
 | Branch | 10.20.0.0/16 | One summary route describes all of the branch |
-| VPN transit | 172.31.0.0/30 | Tunnel0 between HQRT1 and BRRT1 |
+| VPN transit | 172.31.0.0/30 | Tunnel10 between HQRT1 and BRRT1 |
 | HQ WAN | 203.0.113.8/30 | ISP1 .9 — HQRT1 .10 |
 | Branch WAN | 203.0.113.12/30 | ISP1 .13 — BRRT1 .14 |
 
@@ -35,14 +35,14 @@ A /24 per department gives ~230 DHCP addresses each, several times the current h
 |--------|-----------|---------|------|
 | HQRT1 | E0/0 | 203.0.113.10/30 | WAN |
 | HQRT1 | E0/1.10 / .20 / .30 / .40 / .50 / .99 | 10.10.x.1/24 | gateways |
-| HQRT1 | Tunnel0 | 172.31.0.1/30 | VPN |
+| HQRT1 | Tunnel10 | 172.31.0.1/30 | VPN |
 | HQSW1 | Vlan99 | 10.10.99.11/24 | 99 |
 | HQSW2 | Vlan99 | 10.10.99.12/24 | 99 |
 | HQSW3 | Vlan99 | 10.10.99.13/24 | 99 |
 | SRV1 | ens2 | 10.10.50.10/24 | 50 |
 | BRRT1 | E0/0 | 203.0.113.14/30 | WAN |
 | BRRT1 | E0/1.10 / .20 / .30 / .99 | 10.20.x.1/24 | gateways |
-| BRRT1 | Tunnel0 | 172.31.0.2/30 | VPN |
+| BRRT1 | Tunnel10 | 172.31.0.2/30 | VPN |
 | BRSW1 | Vlan99 | 10.20.99.11/24 | 99 |
 | ISP1 | Lo0 | 8.8.8.8/32 | simulated internet |
 

@@ -123,7 +123,7 @@ Et0/0               Desg FWD 100       128.1    P2p
 Et0/1               Desg FWD 100       128.2    P2p 
 Et0/2               Desg FWD 100       128.3    P2p       
 ```
-### HWSW2
+### HQSW2
 ```bash
 HQSW2#show int trunk
 

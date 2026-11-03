@@ -59,11 +59,11 @@ Each decision records what was chosen, what else was considered, and why. This i
 
 ## DD-06 — Route-based VPN (IKEv2 + IPsec VTI) with OSPF over the tunnel
 
-**Decision:** `Tunnel0` on each router in `tunnel mode ipsec ipv4`, OSPF area 0 across the tunnel, static default route to the ISP.
+**Decision:** `Tunnel10` on each router in `tunnel mode ipsec ipv4`, OSPF area 0 across the tunnel, static default route to the ISP.
 
 **Alternatives:** Policy-based crypto map with a matching crypto ACL; GRE over IPsec.
 
-**Why:** With a VTI the tunnel is a real interface: routing decides what is encrypted, OSPF learns the remote site automatically, and traffic to the remote site leaves through Tunnel0 rather than the NAT outside interface, so no NAT-exemption ACL is needed. Only the LAN and tunnel networks go into OSPF; the WAN /30s stay out to avoid recursive routing.
+**Why:** With a VTI the tunnel is a real interface: routing decides what is encrypted, OSPF learns the remote site automatically, and traffic to the remote site leaves through Tunnel10 rather than the NAT outside interface, so no NAT-exemption ACL is needed. Only the LAN and tunnel networks go into OSPF; the WAN /30s stay out to avoid recursive routing.
 
 ---
 
