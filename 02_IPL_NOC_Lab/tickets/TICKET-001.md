@@ -6,7 +6,7 @@
 | Opened | 2026-11-16 14:38 |
 | Reported by | Baseline verification, check #8 |
 | Affected | SCADA-PC1 (10.2.10.10) → DMZ-SRV1 (172.16.50.10), TCP/80 |
-| Status | Tier 1: escalated 15:24 · Root cause confirmed 15:46 · Fix applied, verification pending |
+| Status | Tier 1: escalated 15:24 · Root cause confirmed 15:46 · Fix applied 15:51, ICMP verified, TCP/80 pending |
 
 This ticket is written in two parts:
 - **Part 1, Tier 1 NOC:** what a NOC Analyst 1 does: confirm, scope, check reachability and routing with read-only commands, then escalate with evidence.
@@ -124,8 +124,9 @@ Baseline config in [`../configs/DMZ-SRV1.txt`](../configs/DMZ-SRV1.txt) and the 
 
 **Verification:**
 - [ ] DMZ-SRV1 `show ip route` → `S* 0.0.0.0/0 via 172.16.50.1`
-- [ ] SCADA-PC1 `ping 172.16.50.10` and `telnet 172.16.50.10 80`
-- [ ] HQ-PC1 `ping 172.16.50.10`
+- [x] SCADA-PC1 `ping 172.16.50.10`: success (15:51)
+- [ ] SCADA-PC1 `telnet 172.16.50.10 80` (original symptom)
+- [x] HQ-PC1 `ping 172.16.50.10`: success (15:51)
 - [ ] INET `telnet 198.51.100.10 80 /source-interface Loopback0`
 
 **Follow-up (problem record):** HQ-PC1, RENO-PC1 and SCADA-PC1 depend on proxy ARP for the same reason. If proxy ARP is ever disabled on their gateways (a common hardening step), they will fail the same way. Recommend the same default-route fix.
