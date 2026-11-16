@@ -17,3 +17,14 @@ Format for each entry: **Symptom → Evidence → Cause → Fix → Lesson.**
 - **Cause:** Since CML 2.7, every reference image is copied to the local disk.
 - **Fix:** Skipped the supplemental ISO; wipe finished labs.
 - **Lesson:** Size the CML disk for the images you plan to import, not just the labs.
+
+---
+
+## 2. Tickets
+
+### 2.1 TICKET-001: DMZ server unreachable from other subnets
+- **Symptom:** Internal hosts and the internet could not reach DMZ-SRV1; FW1 itself could.
+- **Evidence:** packet-tracer allowed; FW1 capture showed echo requests out to the DMZ and no replies; DMZ-SRV1 `show ip arp` had `10.2.10.10 Incomplete`.
+- **Cause:** DMZ-SRV1 in host mode (`no ip routing` + `ip default-gateway`) ARPed for remote hosts; the ASA does not proxy-ARP for them.
+- **Fix:** `ip routing` + `ip route 0.0.0.0 0.0.0.0 172.16.50.1` on DMZ-SRV1.
+- **Lesson:** Proxy ARP on IOS routers hides host misconfigurations; a firewall as gateway exposes them. Check the ARP table, not just gateway pings.

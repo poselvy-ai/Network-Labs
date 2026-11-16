@@ -1,12 +1,12 @@
 hostname DMZ-SRV1
-no ip routing
 no ip domain lookup
+ip routing
 ip http server
 interface Ethernet0/0
- description LAN
+ description DMZ
  ip address 172.16.50.10 255.255.255.0
  no shutdown
-ip default-gateway 172.16.50.1
+ip route 0.0.0.0 0.0.0.0 172.16.50.1
 line con 0
  logging synchronous
  exec-timeout 0 0

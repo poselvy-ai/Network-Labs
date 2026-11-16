@@ -6,7 +6,7 @@
 | Opened | 2026-11-16 14:38 |
 | Reported by | Baseline verification, check #8 |
 | Affected | SCADA-PC1 (10.2.10.10) → DMZ-SRV1 (172.16.50.10), TCP/80 |
-| Status | Tier 1: escalated 15:24 · Engineer investigation: root cause being confirmed |
+| Status | Tier 1: escalated 15:24 · Root cause confirmed 15:46 · Fix applied, verification pending |
 
 This ticket is written in two parts:
 - **Part 1, Tier 1 NOC:** what a NOC Analyst 1 does: confirm, scope, check reachability and routing with read-only commands, then escalate with evidence.
@@ -90,23 +90,49 @@ Work done after the escalation, as the engineer would. Captures and debugs on pr
 | 15:39 | DMZ-SRV1 | `ping 172.16.50.1` | 5/5 | Server ↔ gateway OK |
 | 15:39 | DMZ-SRV1 | `ping 10.2.10.10` | 0/5 | Expected by design: dmz (50) → inside (100) denied without an ACL. Not evidence by itself |
 | 15:43 | DMZ-SRV1 | `show ip traffic \| include echo` | Rcvd 40 echo; Sent 40 echo reply, 168 unreachable | Server receives pings and generates replies (unreachables likely answers to traceroute probes), yet none arrive at FW1 |
+| 15:46 | DMZ-SRV1 | `clear arp`; `debug ip icmp`; ping from SCADA-PC1 | Echo replies "sent" to 10.2.10.10 (counter 45 → 50) | Server builds the replies |
+| 15:46 | DMZ-SRV1 | `show ip arp` | **10.2.10.10 Incomplete**; 172.16.50.1 resolved (5254.004f.2b6b) | Server ARPs for the remote host instead of using its gateway. Replies die on the server. **Root cause confirmed** |
 
-## Working hypothesis
+## Hypothesis (confirmed 15:46)
 
 DMZ-SRV1 runs as a host (`no ip routing`). For off-subnet destinations it appears to ARP for the remote host directly instead of using its default gateway. On the other host subnets, the IOS router answers that ARP (proxy ARP is on by default), which hides the problem. The ASA does not proxy-ARP for arbitrary addresses, so DMZ-SRV1's replies have no next hop.
 
 **Confirming test:**
-- [ ] DMZ-SRV1: `clear ip arp` → ping from SCADA-PC1 → `show ip traffic | include echo` (echo reply counter +5) and `show ip arp` (10.2.10.10 *Incomplete*)
+- [x] DMZ-SRV1: `clear ip arp` → ping from SCADA-PC1 → echo reply counter +5 and `show ip arp` shows 10.2.10.10 *Incomplete*
 - [ ] SCADA-PC1: `show ip arp` (8.8.8.8 resolved to SUB-R1's MAC = proxy ARP)
 
 ## Root cause
 
-_To be confirmed by the test above._
+DMZ-SRV1 was built as a host with `no ip routing` + `ip default-gateway 172.16.50.1`. In that mode it ARPed for off-subnet destinations (10.2.10.10) instead of forwarding to its gateway. FW1 (ASA) does not proxy-ARP for arbitrary addresses, so the ARP never resolved and every reply to another subnet was dropped on the server. Inside → DMZ and internet → DMZ were both affected.
+
+Contributing factor: the other lab hosts use the same host-mode config but appeared healthy because their IOS gateways answer proxy ARP by default, which masks the problem.
 
 ## Resolution
 
-_TBD_
+Configured DMZ-SRV1 with a real default route instead of host mode:
 
-## Lesson learned
+```
+conf t
+ ip routing
+ ip route 0.0.0.0 0.0.0.0 172.16.50.1
+ no ip default-gateway
+end
+write memory
+```
 
-_TBD_
+Baseline config in [`../configs/DMZ-SRV1.txt`](../configs/DMZ-SRV1.txt) and the CML import file updated so a rebuild doesn't reintroduce the fault.
+
+**Verification:**
+- [ ] DMZ-SRV1 `show ip route` → `S* 0.0.0.0/0 via 172.16.50.1`
+- [ ] SCADA-PC1 `ping 172.16.50.10` and `telnet 172.16.50.10 80`
+- [ ] HQ-PC1 `ping 172.16.50.10`
+- [ ] INET `telnet 198.51.100.10 80 /source-interface Loopback0`
+
+**Follow-up (problem record):** HQ-PC1, RENO-PC1 and SCADA-PC1 depend on proxy ARP for the same reason. If proxy ARP is ever disabled on their gateways (a common hardening step), they will fail the same way. Recommend the same default-route fix.
+
+## Lessons learned
+
+1. **A capture beats a theory.** Requests out, no replies back moved the investigation off the firewall in one test.
+2. **"The device can ping its gateway" doesn't prove it uses its gateway.** Check `show ip arp` for *Incomplete* entries to off-subnet addresses.
+3. **Proxy ARP can hide misconfigurations.** Things that "work" only because a router answers ARP for other hosts break as soon as the gateway changes (here, an ASA).
+4. **Tier 1 escalation was correct even though its suspect was wrong.** The evidence narrowed the problem to the firewall boundary; engineering found the exact cause on the far side of it.
