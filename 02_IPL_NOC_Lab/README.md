@@ -96,7 +96,7 @@ Workflow and template: [`tickets/README.md`](./tickets/README.md)
 
 | Ticket | Summary | Status |
 |--------|---------|--------|
-| [TICKET-001](./tickets/TICKET-001.md) | SCADA-PC1 cannot reach DMZ web server (TCP/80) | Open |
+| [TICKET-001](./tickets/TICKET-001.md) | SCADA-PC1 cannot reach DMZ web server (TCP/80) | Escalated |
 
 ## Lessons learned
 
