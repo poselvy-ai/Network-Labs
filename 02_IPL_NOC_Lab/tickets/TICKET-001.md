@@ -20,7 +20,7 @@ Trying 172.16.50.10, 80 ...
 
 ## Impact
 
-Hosts behind both core routers cannot reach the DMZ (confirmed from SCADA-PC1, CORE-R2 and HQ-PC1). Inside → internet not yet tested.
+Hosts behind both core routers cannot reach the DMZ (confirmed from SCADA-PC1, CORE-R2 and HQ-PC1). Inside → internet **works** (SCADA-PC1 → 8.8.8.8 5/5), so the outage is limited to the DMZ.
 
 ## Expected path
 
@@ -45,18 +45,21 @@ Hosts behind both core routers cannot reach the DMZ (confirmed from SCADA-PC1, C
 | 15:1x | CORE-R2 | `ping 172.16.50.10` | 0/5 | Fails one hop from FW1 |
 | 15:1x | HQ-PC1 | `ping 172.16.50.10` | 0/5 | Fails from a second site via inside1 too |
 | 15:1x | FW1 | `ping 172.16.50.10`, `10.2.10.10`, `10.255.255.2`, `10.255.255.4` | All 5/5 | FW1 reaches both sides itself |
+| 15:27 | FW1 | `packet-tracer input inside2 icmp 10.2.10.10 8 0 172.16.50.10 detail` | Action: allow. Route via dmz, no NAT, ICMP inspected, adjacency to DMZ-SRV1 MAC aabb.cc00.0700 | FW1 policy permits and forwards the request |
+| 15:27 | FW1 | `show asp drop` | acl-drop 25/10, l2_acl 205, interface-down 4 (never cleared) | Nothing tied to this flow; counters need clearing before a test |
+| 15:30 | SCADA-PC1 | `ping 8.8.8.8` | 5/5 | Inside → outside through FW1 works; return traffic and ICMP inspection OK |
 
 Note: pinging 172.16.50.1 *from SCADA-PC1* fails by design. An ASA only answers pings on the interface the ping arrives on.
 
 ### Evidence still to attach (FW1)
-- [ ] `packet-tracer input inside2 icmp 10.2.10.10 8 0 172.16.50.10 detail`
-- [ ] `show asp drop`
+- [x] `packet-tracer input inside2 icmp 10.2.10.10 8 0 172.16.50.10 detail`
+- [x] `show asp drop`
 - [ ] `capture CAP1 interface dmz match ip host 10.2.10.10 host 172.16.50.10` → ping from SCADA-PC1 → `show capture CAP1`
-- [ ] Scope: `ping 8.8.8.8` from HQ-PC1 (does inside → outside work?)
+- [x] Scope: inside → outside works (SCADA-PC1 → 8.8.8.8)
 
 ## Root cause
 
-_Pending engineering._ Fault isolated to traffic transiting FW1 between inside interfaces and the DMZ.
+_Pending._ FW1 permits and forwards inside → dmz (packet-tracer), and inside → outside works. Leading suspect is now the **return path from DMZ-SRV1** (e.g. its default gateway), to be confirmed with the DMZ capture.
 
 ## Escalation note
 
@@ -71,7 +74,7 @@ _Pending engineering._ Fault isolated to traffic transiting FW1 between inside i
 
 **Isolated to:** traffic *through* FW1, inside1/inside2 (security 100) → dmz (security 50). Both inside interfaces affected, so not a single link or core router.
 
-**Suspected areas (for engineering):** firewall policy / ICMP and TCP inspection / NAT handling for inside → dmz.
+**Suspected areas (for engineering):** initially firewall policy. Update 15:30: packet-tracer shows FW1 allows and forwards the flow, and inside → internet works, so suspicion has moved to DMZ-SRV1's reply path.
 
 **Requested:** firewall review of inside → dmz flows. Packet-tracer, ASP drop counters and DMZ capture output attached below once collected.
 
