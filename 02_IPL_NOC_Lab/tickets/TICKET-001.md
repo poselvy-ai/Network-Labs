@@ -136,3 +136,5 @@ Baseline config in [`../configs/DMZ-SRV1.txt`](../configs/DMZ-SRV1.txt) and the 
 2. **"The device can ping its gateway" doesn't prove it uses its gateway.** Check `show ip arp` for *Incomplete* entries to off-subnet addresses.
 3. **Proxy ARP can hide misconfigurations.** Things that "work" only because a router answers ARP for other hosts break as soon as the gateway changes (here, an ASA).
 4. **Tier 1 escalation was correct even though its suspect was wrong.** The evidence narrowed the problem to the firewall boundary; engineering found the exact cause on the far side of it.
+5. **Check both ends of the path.** Tier 1 worked from the source toward the firewall; the fault was on the destination. Checking the destination's gateway *and* its ARP/neighbor table early (`show ip route` + `show ip arp` on Cisco; `ipconfig /all` + `arp -a` on Windows; `ip route` + `ip neigh` on Linux) would have found it sooner.
+6. **A router-as-host needs a gateway of last resort.** With `ip routing` on, a static default route (`S* 0.0.0.0/0`) is what sends return traffic to the gateway; host-mode `ip default-gateway` looked correct but wasn't used.
