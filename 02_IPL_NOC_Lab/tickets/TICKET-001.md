@@ -48,18 +48,23 @@ Hosts behind both core routers cannot reach the DMZ (confirmed from SCADA-PC1, C
 | 15:27 | FW1 | `packet-tracer input inside2 icmp 10.2.10.10 8 0 172.16.50.10 detail` | Action: allow. Route via dmz, no NAT, ICMP inspected, adjacency to DMZ-SRV1 MAC aabb.cc00.0700 | FW1 policy permits and forwards the request |
 | 15:27 | FW1 | `show asp drop` | acl-drop 25/10, l2_acl 205, interface-down 4 (never cleared) | Nothing tied to this flow; counters need clearing before a test |
 | 15:30 | SCADA-PC1 | `ping 8.8.8.8` | 5/5 | Inside → outside through FW1 works; return traffic and ICMP inspection OK |
+| 15:32 | FW1 | `clear asp drop`; `capture CAP1 interface dmz match ip host 10.2.10.10 host 172.16.50.10`; ping from SCADA-PC1 | 5 echo **requests** out the dmz interface, **0 replies**; asp drop: only l2_acl 6 | FW1 delivers the requests to the DMZ and drops nothing. DMZ-SRV1 never sends a reply |
+| 15:39 | FW1 | `show route` | 10.2.10.0/24 via 10.0.0.6 (inside2); 172.16.50.0/24 connected dmz | FW1's routing for both directions is correct |
+| 15:39 | DMZ-SRV1 | `show ip route` / `show ip int brief` | Default gateway 172.16.50.1; E0/0 172.16.50.10 up/up | Gateway configured, link up |
+| 15:39 | DMZ-SRV1 | `ping 172.16.50.1` | 5/5 | Server ↔ gateway OK |
+| 15:39 | DMZ-SRV1 | `ping 10.2.10.10` | 0/5 | Expected to fail by design: dmz (50) → inside (100) is denied without an ACL. Not evidence by itself |
 
 Note: pinging 172.16.50.1 *from SCADA-PC1* fails by design. An ASA only answers pings on the interface the ping arrives on.
 
 ### Evidence still to attach (FW1)
 - [x] `packet-tracer input inside2 icmp 10.2.10.10 8 0 172.16.50.10 detail`
 - [x] `show asp drop`
-- [ ] `capture CAP1 interface dmz match ip host 10.2.10.10 host 172.16.50.10` → ping from SCADA-PC1 → `show capture CAP1`
+- [x] `capture CAP1 interface dmz match ip host 10.2.10.10 host 172.16.50.10` → requests only, no replies
 - [x] Scope: inside → outside works (SCADA-PC1 → 8.8.8.8)
 
 ## Root cause
 
-_Pending._ FW1 permits and forwards inside → dmz (packet-tracer), and inside → outside works. Leading suspect is now the **return path from DMZ-SRV1** (e.g. its default gateway), to be confirmed with the DMZ capture.
+_Pending._ FW1 permits and forwards inside → dmz (packet-tracer), and inside → outside works. The DMZ capture shows echo requests delivered to the DMZ and **no replies from DMZ-SRV1**. Fault is isolated to **DMZ-SRV1 not answering traffic from other subnets**; FW1 is cleared.
 
 ## Escalation note
 
