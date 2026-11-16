@@ -1,0 +1,24 @@
+hostname ISP-B
+no ip domain lookup
+interface Loopback0
+ ip address 100.64.2.1 255.255.255.255
+interface Ethernet0/0
+ description TO-EDGE-R1
+ ip address 203.0.113.5 255.255.255.252
+ no shutdown
+interface Ethernet0/1
+ description TO-INET
+ ip address 203.0.113.13 255.255.255.252
+ no shutdown
+router bgp 65200
+ bgp router-id 100.64.2.1
+ bgp log-neighbor-changes
+ network 100.64.2.1 mask 255.255.255.255
+ neighbor 203.0.113.6 remote-as 65001
+ neighbor 203.0.113.6 description CUSTOMER-IPL
+ neighbor 203.0.113.14 remote-as 65300
+ neighbor 203.0.113.14 description INTERNET
+line con 0
+ logging synchronous
+ exec-timeout 0 0
+end

@@ -1,0 +1,24 @@
+hostname HQ-SW1
+no ip domain lookup
+vlan 10
+ name USERS
+interface Ethernet0/0
+ description UPLINK-CORE-R1
+ switchport access vlan 10
+ switchport mode access
+ no shutdown
+interface Ethernet0/1
+ description HQ-PC1
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast edge
+ no shutdown
+interface Vlan10
+ description MGMT
+ ip address 10.0.10.2 255.255.255.0
+ no shutdown
+ip default-gateway 10.0.10.1
+line con 0
+ logging synchronous
+ exec-timeout 0 0
+end

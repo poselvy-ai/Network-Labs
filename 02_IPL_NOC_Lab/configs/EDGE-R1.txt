@@ -1,0 +1,37 @@
+hostname EDGE-R1
+no ip domain lookup
+interface Ethernet0/0
+ description TO-ISP-A
+ ip address 203.0.113.2 255.255.255.252
+ no shutdown
+interface Ethernet0/1
+ description TO-ISP-B
+ ip address 203.0.113.6 255.255.255.252
+ no shutdown
+interface Ethernet0/2
+ description TO-FW1-outside
+ ip address 198.51.100.1 255.255.255.248
+ no shutdown
+ip route 198.51.100.0 255.255.255.0 Null0
+ip route 198.51.100.8 255.255.255.248 198.51.100.2
+ip prefix-list PL-IPL-OUT seq 5 permit 198.51.100.0/24
+route-map RM-ISP-A-IN permit 10
+ set local-preference 200
+route-map RM-ISP-B-OUT permit 10
+ set as-path prepend 65001 65001
+router bgp 65001
+ bgp router-id 198.51.100.1
+ bgp log-neighbor-changes
+ network 198.51.100.0 mask 255.255.255.0
+ neighbor 203.0.113.1 remote-as 65100
+ neighbor 203.0.113.1 description ISP-A-PRIMARY
+ neighbor 203.0.113.1 route-map RM-ISP-A-IN in
+ neighbor 203.0.113.1 prefix-list PL-IPL-OUT out
+ neighbor 203.0.113.5 remote-as 65200
+ neighbor 203.0.113.5 description ISP-B-BACKUP
+ neighbor 203.0.113.5 prefix-list PL-IPL-OUT out
+ neighbor 203.0.113.5 route-map RM-ISP-B-OUT out
+line con 0
+ logging synchronous
+ exec-timeout 0 0
+end

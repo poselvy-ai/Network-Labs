@@ -1,0 +1,33 @@
+hostname CORE-R1
+no ip domain lookup
+interface Loopback0
+ ip address 10.255.255.1 255.255.255.255
+interface Ethernet0/0
+ description TO-FW1-inside1
+ ip address 10.0.0.2 255.255.255.252
+ no shutdown
+interface Ethernet0/1
+ description TO-CORE-R2
+ ip address 10.0.0.9 255.255.255.252
+ no shutdown
+interface Ethernet0/2
+ description TO-RENO-R1
+ ip address 10.1.0.1 255.255.255.252
+ no shutdown
+interface Ethernet0/3
+ description TO-HQ-SW1-USERS
+ ip address 10.0.10.1 255.255.255.0
+ no shutdown
+router ospf 1
+ router-id 10.255.255.1
+ log-adjacency-changes
+ passive-interface Ethernet0/3
+ network 10.255.255.1 0.0.0.0 area 0
+ network 10.0.0.0 0.0.0.3 area 0
+ network 10.0.0.8 0.0.0.3 area 0
+ network 10.0.10.0 0.0.0.255 area 0
+ network 10.1.0.0 0.0.0.3 area 1
+line con 0
+ logging synchronous
+ exec-timeout 0 0
+end

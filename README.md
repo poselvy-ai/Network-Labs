@@ -9,6 +9,7 @@ Hands-on network engineering labs built in **Cisco Modeling Labs (CML)**. Each l
 | # | Lab | Skills demonstrated | Status |
 |---|-----|---------------------|--------|
 | 1 | [Silver State Business Solutions](./01_Silver_State_Business/README.md) | VLANs, 802.1Q trunking, Rapid PVST+, router-on-a-stick, DHCP, DNS, PAT, IKEv2 route-based VPN, OSPF | Complete |
+| 2 | [Ironwood Power & Light — NOC Troubleshooting](./02_IPL_NOC_Lab/README.md) | Multi-area OSPF, dual-homed eBGP, ASAv firewall (NAT, DMZ, packet-tracer), ticket-based fault isolation and escalation | In progress |
 
 ## How each lab is organized
 

@@ -1,0 +1,12 @@
+hostname HQ-PC1
+no ip routing
+no ip domain lookup
+interface Ethernet0/0
+ description LAN
+ ip address 10.0.10.10 255.255.255.0
+ no shutdown
+ip default-gateway 10.0.10.1
+line con 0
+ logging synchronous
+ exec-timeout 0 0
+end

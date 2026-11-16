@@ -1,0 +1,27 @@
+hostname INET
+no ip domain lookup
+interface Loopback0
+ description PUBLIC-DNS-SIM
+ ip address 8.8.8.8 255.255.255.255
+interface Loopback1
+ description PUBLIC-WEB-SIM
+ ip address 1.1.1.1 255.255.255.255
+interface Ethernet0/0
+ description TO-ISP-A
+ ip address 203.0.113.10 255.255.255.252
+ no shutdown
+interface Ethernet0/1
+ description TO-ISP-B
+ ip address 203.0.113.14 255.255.255.252
+ no shutdown
+router bgp 65300
+ bgp router-id 8.8.8.8
+ bgp log-neighbor-changes
+ network 8.8.8.8 mask 255.255.255.255
+ network 1.1.1.1 mask 255.255.255.255
+ neighbor 203.0.113.9 remote-as 65100
+ neighbor 203.0.113.13 remote-as 65200
+line con 0
+ logging synchronous
+ exec-timeout 0 0
+end

@@ -1,0 +1,697 @@
+lab:
+  title: IPL-NOC Lab - Ironwood Power & Light
+  description: 'Tier 1 NOC troubleshooting lab: multi-area OSPF core, ASAv firewall (Palo Alto stand-in), dual-homed eBGP edge. Fictional client.'
+  notes: Baseline (all working). Fault tickets are introduced separately.
+  version: 0.2.2
+nodes:
+- id: n0
+  label: ISP-A
+  node_definition: iol-xe
+  x: -400
+  y: -400
+  configuration: |-
+    hostname ISP-A
+    no ip domain lookup
+    interface Loopback0
+     ip address 100.64.1.1 255.255.255.255
+    interface Ethernet0/0
+     description TO-EDGE-R1
+     ip address 203.0.113.1 255.255.255.252
+     no shutdown
+    interface Ethernet0/1
+     description TO-INET
+     ip address 203.0.113.9 255.255.255.252
+     no shutdown
+    router bgp 65100
+     bgp router-id 100.64.1.1
+     bgp log-neighbor-changes
+     network 100.64.1.1 mask 255.255.255.255
+     neighbor 203.0.113.2 remote-as 65001
+     neighbor 203.0.113.2 description CUSTOMER-IPL
+     neighbor 203.0.113.10 remote-as 65300
+     neighbor 203.0.113.10 description INTERNET
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+- id: n1
+  label: INET
+  node_definition: iol-xe
+  x: 0
+  y: -450
+  configuration: |-
+    hostname INET
+    no ip domain lookup
+    interface Loopback0
+     description PUBLIC-DNS-SIM
+     ip address 8.8.8.8 255.255.255.255
+    interface Loopback1
+     description PUBLIC-WEB-SIM
+     ip address 1.1.1.1 255.255.255.255
+    interface Ethernet0/0
+     description TO-ISP-A
+     ip address 203.0.113.10 255.255.255.252
+     no shutdown
+    interface Ethernet0/1
+     description TO-ISP-B
+     ip address 203.0.113.14 255.255.255.252
+     no shutdown
+    router bgp 65300
+     bgp router-id 8.8.8.8
+     bgp log-neighbor-changes
+     network 8.8.8.8 mask 255.255.255.255
+     network 1.1.1.1 mask 255.255.255.255
+     neighbor 203.0.113.9 remote-as 65100
+     neighbor 203.0.113.13 remote-as 65200
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+- id: n2
+  label: ISP-B
+  node_definition: iol-xe
+  x: 400
+  y: -400
+  configuration: |-
+    hostname ISP-B
+    no ip domain lookup
+    interface Loopback0
+     ip address 100.64.2.1 255.255.255.255
+    interface Ethernet0/0
+     description TO-EDGE-R1
+     ip address 203.0.113.5 255.255.255.252
+     no shutdown
+    interface Ethernet0/1
+     description TO-INET
+     ip address 203.0.113.13 255.255.255.252
+     no shutdown
+    router bgp 65200
+     bgp router-id 100.64.2.1
+     bgp log-neighbor-changes
+     network 100.64.2.1 mask 255.255.255.255
+     neighbor 203.0.113.6 remote-as 65001
+     neighbor 203.0.113.6 description CUSTOMER-IPL
+     neighbor 203.0.113.14 remote-as 65300
+     neighbor 203.0.113.14 description INTERNET
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+- id: n3
+  label: EDGE-R1
+  node_definition: iol-xe
+  x: 0
+  y: -250
+  configuration: |-
+    hostname EDGE-R1
+    no ip domain lookup
+    interface Ethernet0/0
+     description TO-ISP-A
+     ip address 203.0.113.2 255.255.255.252
+     no shutdown
+    interface Ethernet0/1
+     description TO-ISP-B
+     ip address 203.0.113.6 255.255.255.252
+     no shutdown
+    interface Ethernet0/2
+     description TO-FW1-outside
+     ip address 198.51.100.1 255.255.255.248
+     no shutdown
+    ip route 198.51.100.0 255.255.255.0 Null0
+    ip route 198.51.100.8 255.255.255.248 198.51.100.2
+    ip prefix-list PL-IPL-OUT seq 5 permit 198.51.100.0/24
+    route-map RM-ISP-A-IN permit 10
+     set local-preference 200
+    route-map RM-ISP-B-OUT permit 10
+     set as-path prepend 65001 65001
+    router bgp 65001
+     bgp router-id 198.51.100.1
+     bgp log-neighbor-changes
+     network 198.51.100.0 mask 255.255.255.0
+     neighbor 203.0.113.1 remote-as 65100
+     neighbor 203.0.113.1 description ISP-A-PRIMARY
+     neighbor 203.0.113.1 route-map RM-ISP-A-IN in
+     neighbor 203.0.113.1 prefix-list PL-IPL-OUT out
+     neighbor 203.0.113.5 remote-as 65200
+     neighbor 203.0.113.5 description ISP-B-BACKUP
+     neighbor 203.0.113.5 prefix-list PL-IPL-OUT out
+     neighbor 203.0.113.5 route-map RM-ISP-B-OUT out
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+  - id: i2
+    label: Ethernet0/2
+    slot: 2
+    type: physical
+- id: n4
+  label: FW1
+  node_definition: asav
+  x: 0
+  y: -100
+  configuration: |
+    hostname FW1
+    interface GigabitEthernet0/0
+     nameif outside
+     security-level 0
+     ip address 198.51.100.2 255.255.255.248
+     no shutdown
+    interface GigabitEthernet0/1
+     nameif inside1
+     security-level 100
+     ip address 10.0.0.1 255.255.255.252
+     no shutdown
+    interface GigabitEthernet0/2
+     nameif inside2
+     security-level 100
+     ip address 10.0.0.5 255.255.255.252
+     no shutdown
+    interface GigabitEthernet0/3
+     nameif dmz
+     security-level 50
+     ip address 172.16.50.1 255.255.255.0
+     no shutdown
+    same-security-traffic permit inter-interface
+    object network OBJ-INSIDE-NETS
+     subnet 10.0.0.0 255.0.0.0
+     nat (any,outside) dynamic interface
+    object network OBJ-DMZ-SRV1
+     host 172.16.50.10
+     nat (dmz,outside) static 198.51.100.10
+    access-list OUTSIDE-IN extended permit tcp any host 172.16.50.10 eq www
+    access-list OUTSIDE-IN extended permit icmp any host 172.16.50.10 echo
+    access-group OUTSIDE-IN in interface outside
+    route outside 0.0.0.0 0.0.0.0 198.51.100.1
+    router ospf 1
+     router-id 10.255.255.254
+     network 10.0.0.0 255.255.255.252 area 0
+     network 10.0.0.4 255.255.255.252 area 0
+     network 172.16.50.0 255.255.255.0 area 0
+     log-adj-changes
+     default-information originate
+    class-map inspection_default
+     match default-inspection-traffic
+    policy-map global_policy
+     class inspection_default
+      inspect icmp
+      inspect http
+    service-policy global_policy global
+    logging enable
+    logging buffered informational
+  tags: []
+  interfaces:
+  - id: i0
+    label: Management0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: GigabitEthernet0/0
+    slot: 1
+    type: physical
+  - id: i2
+    label: GigabitEthernet0/1
+    slot: 2
+    type: physical
+  - id: i3
+    label: GigabitEthernet0/2
+    slot: 3
+    type: physical
+  - id: i4
+    label: GigabitEthernet0/3
+    slot: 4
+    type: physical
+- id: n5
+  label: DMZ-SRV1
+  node_definition: iol-xe
+  x: 300
+  y: -100
+  configuration: |-
+    hostname DMZ-SRV1
+    no ip routing
+    no ip domain lookup
+    ip http server
+    interface Ethernet0/0
+     description LAN
+     ip address 172.16.50.10 255.255.255.0
+     no shutdown
+    ip default-gateway 172.16.50.1
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+- id: n6
+  label: CORE-R1
+  node_definition: iol-xe
+  x: -200
+  y: 50
+  configuration: |-
+    hostname CORE-R1
+    no ip domain lookup
+    interface Loopback0
+     ip address 10.255.255.1 255.255.255.255
+    interface Ethernet0/0
+     description TO-FW1-inside1
+     ip address 10.0.0.2 255.255.255.252
+     no shutdown
+    interface Ethernet0/1
+     description TO-CORE-R2
+     ip address 10.0.0.9 255.255.255.252
+     no shutdown
+    interface Ethernet0/2
+     description TO-RENO-R1
+     ip address 10.1.0.1 255.255.255.252
+     no shutdown
+    interface Ethernet0/3
+     description TO-HQ-SW1-USERS
+     ip address 10.0.10.1 255.255.255.0
+     no shutdown
+    router ospf 1
+     router-id 10.255.255.1
+     log-adjacency-changes
+     passive-interface Ethernet0/3
+     network 10.255.255.1 0.0.0.0 area 0
+     network 10.0.0.0 0.0.0.3 area 0
+     network 10.0.0.8 0.0.0.3 area 0
+     network 10.0.10.0 0.0.0.255 area 0
+     network 10.1.0.0 0.0.0.3 area 1
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+  - id: i2
+    label: Ethernet0/2
+    slot: 2
+    type: physical
+  - id: i3
+    label: Ethernet0/3
+    slot: 3
+    type: physical
+- id: n7
+  label: CORE-R2
+  node_definition: iol-xe
+  x: 200
+  y: 50
+  configuration: |-
+    hostname CORE-R2
+    no ip domain lookup
+    interface Loopback0
+     ip address 10.255.255.2 255.255.255.255
+    interface Ethernet0/0
+     description TO-FW1-inside2
+     ip address 10.0.0.6 255.255.255.252
+     no shutdown
+    interface Ethernet0/1
+     description TO-CORE-R1
+     ip address 10.0.0.10 255.255.255.252
+     no shutdown
+    interface Ethernet0/2
+     description TO-RENO-R1
+     ip address 10.1.0.5 255.255.255.252
+     no shutdown
+    interface Ethernet0/3
+     description TO-SUB-R1
+     ip address 10.2.0.1 255.255.255.252
+     no shutdown
+    router ospf 1
+     router-id 10.255.255.2
+     log-adjacency-changes
+     network 10.255.255.2 0.0.0.0 area 0
+     network 10.0.0.4 0.0.0.3 area 0
+     network 10.0.0.8 0.0.0.3 area 0
+     network 10.1.0.4 0.0.0.3 area 1
+     network 10.2.0.0 0.0.0.3 area 2
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+  - id: i2
+    label: Ethernet0/2
+    slot: 2
+    type: physical
+  - id: i3
+    label: Ethernet0/3
+    slot: 3
+    type: physical
+- id: n8
+  label: HQ-SW1
+  node_definition: ioll2-xe
+  x: -400
+  y: 200
+  configuration: |-
+    hostname HQ-SW1
+    no ip domain lookup
+    vlan 10
+     name USERS
+    interface Ethernet0/0
+     description UPLINK-CORE-R1
+     switchport access vlan 10
+     switchport mode access
+     no shutdown
+    interface Ethernet0/1
+     description HQ-PC1
+     switchport access vlan 10
+     switchport mode access
+     spanning-tree portfast edge
+     no shutdown
+    interface Vlan10
+     description MGMT
+     ip address 10.0.10.2 255.255.255.0
+     no shutdown
+    ip default-gateway 10.0.10.1
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+- id: n9
+  label: RENO-R1
+  node_definition: iol-xe
+  x: 0
+  y: 200
+  configuration: |-
+    hostname RENO-R1
+    no ip domain lookup
+    interface Loopback0
+     ip address 10.255.255.3 255.255.255.255
+    interface Ethernet0/0
+     description TO-CORE-R1
+     ip address 10.1.0.2 255.255.255.252
+     no shutdown
+    interface Ethernet0/1
+     description TO-CORE-R2
+     ip address 10.1.0.6 255.255.255.252
+     no shutdown
+    interface Ethernet0/2
+     description RENO-LAN
+     ip address 10.1.10.1 255.255.255.0
+     no shutdown
+    router ospf 1
+     router-id 10.255.255.3
+     log-adjacency-changes
+     passive-interface Ethernet0/2
+     network 10.255.255.3 0.0.0.0 area 1
+     network 10.1.0.0 0.0.0.3 area 1
+     network 10.1.0.4 0.0.0.3 area 1
+     network 10.1.10.0 0.0.0.255 area 1
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+  - id: i2
+    label: Ethernet0/2
+    slot: 2
+    type: physical
+- id: n10
+  label: SUB-R1
+  node_definition: iol-xe
+  x: 400
+  y: 200
+  configuration: |-
+    hostname SUB-R1
+    no ip domain lookup
+    interface Loopback0
+     ip address 10.255.255.4 255.255.255.255
+    interface Ethernet0/0
+     description TO-CORE-R2
+     ip address 10.2.0.2 255.255.255.252
+     no shutdown
+    interface Ethernet0/1
+     description SCADA-LAN
+     ip address 10.2.10.1 255.255.255.0
+     no shutdown
+    router ospf 1
+     router-id 10.255.255.4
+     log-adjacency-changes
+     passive-interface Ethernet0/1
+     network 10.255.255.4 0.0.0.0 area 2
+     network 10.2.0.0 0.0.0.3 area 2
+     network 10.2.10.0 0.0.0.255 area 2
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+  - id: i1
+    label: Ethernet0/1
+    slot: 1
+    type: physical
+- id: n11
+  label: HQ-PC1
+  node_definition: iol-xe
+  x: -400
+  y: 350
+  configuration: |-
+    hostname HQ-PC1
+    no ip routing
+    no ip domain lookup
+    interface Ethernet0/0
+     description LAN
+     ip address 10.0.10.10 255.255.255.0
+     no shutdown
+    ip default-gateway 10.0.10.1
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+- id: n12
+  label: RENO-PC1
+  node_definition: iol-xe
+  x: 0
+  y: 350
+  configuration: |-
+    hostname RENO-PC1
+    no ip routing
+    no ip domain lookup
+    interface Ethernet0/0
+     description LAN
+     ip address 10.1.10.10 255.255.255.0
+     no shutdown
+    ip default-gateway 10.1.10.1
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+- id: n13
+  label: SCADA-PC1
+  node_definition: iol-xe
+  x: 400
+  y: 350
+  configuration: |-
+    hostname SCADA-PC1
+    no ip routing
+    no ip domain lookup
+    interface Ethernet0/0
+     description LAN
+     ip address 10.2.10.10 255.255.255.0
+     no shutdown
+    ip default-gateway 10.2.10.1
+    line con 0
+     logging synchronous
+     exec-timeout 0 0
+    end
+  tags: []
+  interfaces:
+  - id: i0
+    label: Ethernet0/0
+    slot: 0
+    type: physical
+links:
+- id: l0
+  n1: n0
+  i1: i0
+  n2: n3
+  i2: i0
+  label: ISP-A-Ethernet0/0<->EDGE-R1-Ethernet0/0
+- id: l1
+  n1: n2
+  i1: i0
+  n2: n3
+  i2: i1
+  label: ISP-B-Ethernet0/0<->EDGE-R1-Ethernet0/1
+- id: l2
+  n1: n0
+  i1: i1
+  n2: n1
+  i2: i0
+  label: ISP-A-Ethernet0/1<->INET-Ethernet0/0
+- id: l3
+  n1: n2
+  i1: i1
+  n2: n1
+  i2: i1
+  label: ISP-B-Ethernet0/1<->INET-Ethernet0/1
+- id: l4
+  n1: n3
+  i1: i2
+  n2: n4
+  i2: i1
+  label: EDGE-R1-Ethernet0/2<->FW1-GigabitEthernet0/0
+- id: l5
+  n1: n4
+  i1: i2
+  n2: n6
+  i2: i0
+  label: FW1-GigabitEthernet0/1<->CORE-R1-Ethernet0/0
+- id: l6
+  n1: n4
+  i1: i3
+  n2: n7
+  i2: i0
+  label: FW1-GigabitEthernet0/2<->CORE-R2-Ethernet0/0
+- id: l7
+  n1: n4
+  i1: i4
+  n2: n5
+  i2: i0
+  label: FW1-GigabitEthernet0/3<->DMZ-SRV1-Ethernet0/0
+- id: l8
+  n1: n6
+  i1: i1
+  n2: n7
+  i2: i1
+  label: CORE-R1-Ethernet0/1<->CORE-R2-Ethernet0/1
+- id: l9
+  n1: n6
+  i1: i2
+  n2: n9
+  i2: i0
+  label: CORE-R1-Ethernet0/2<->RENO-R1-Ethernet0/0
+- id: l10
+  n1: n7
+  i1: i2
+  n2: n9
+  i2: i1
+  label: CORE-R2-Ethernet0/2<->RENO-R1-Ethernet0/1
+- id: l11
+  n1: n7
+  i1: i3
+  n2: n10
+  i2: i0
+  label: CORE-R2-Ethernet0/3<->SUB-R1-Ethernet0/0
+- id: l12
+  n1: n6
+  i1: i3
+  n2: n8
+  i2: i0
+  label: CORE-R1-Ethernet0/3<->HQ-SW1-Ethernet0/0
+- id: l13
+  n1: n8
+  i1: i1
+  n2: n11
+  i2: i0
+  label: HQ-SW1-Ethernet0/1<->HQ-PC1-Ethernet0/0
+- id: l14
+  n1: n9
+  i1: i2
+  n2: n12
+  i2: i0
+  label: RENO-R1-Ethernet0/2<->RENO-PC1-Ethernet0/0
+- id: l15
+  n1: n10
+  i1: i1
+  n2: n13
+  i2: i0
+  label: SUB-R1-Ethernet0/1<->SCADA-PC1-Ethernet0/0
+annotations: []
