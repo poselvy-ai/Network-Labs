@@ -11,7 +11,7 @@ Run these after every fresh start. Paste the output under each check as evidence
 | 5 | EDGE-R1 | `show ip bgp summary` | ISP-A and ISP-B up with prefixes received | |
 | 6 | EDGE-R1 | `show ip bgp 8.8.8.8` | Best path via 203.0.113.1 (local-pref 200) | |
 | 7 | HQ-PC1 | `ping 8.8.8.8` | Success (PAT on FW1) | |
-| 8 | SCADA-PC1 | `telnet 172.16.50.10 80` | Connection opens | **FAILED: see [TICKET-001](../tickets/TICKET-001.md)** |
+| 8 | SCADA-PC1 | `telnet 172.16.50.10 80` | Connection opens | **FAILED: [TICKET-001](../tickets/TICKET-001.md) (closed, network) → [TICKET-002](../tickets/TICKET-002.md) (open, HTTP)** |
 | 9 | INET | `telnet 198.51.100.10 80 /source-interface Loopback0` | Connection opens | |
 
 Tip: `terminal length 0` before long `show` commands so the output copies cleanly.

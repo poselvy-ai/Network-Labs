@@ -96,7 +96,8 @@ Workflow and template: [`tickets/README.md`](./tickets/README.md)
 
 | Ticket | Summary | Status |
 |--------|---------|--------|
-| [TICKET-001](./tickets/TICKET-001.md) | SCADA-PC1 cannot reach DMZ web server (TCP/80) | Root cause found · verifying fix |
+| [TICKET-001](./tickets/TICKET-001.md) | DMZ-SRV1 unreachable from other subnets (host-mode ARP, no default route) | Closed |
+| [TICKET-002](./tickets/TICKET-002.md) | DMZ-SRV1 HTTP service refuses connections (TCP/80) | Open, server team |
 
 ## Lessons learned
 

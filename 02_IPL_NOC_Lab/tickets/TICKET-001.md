@@ -1,4 +1,4 @@
-# TICKET-001 — SCADA-PC1 cannot reach DMZ web server (TCP/80)
+# TICKET-001 — DMZ-SRV1 unreachable from other subnets (reported as: SCADA-PC1 cannot reach DMZ web server)
 
 | Field | Value |
 |-------|-------|
@@ -6,7 +6,7 @@
 | Opened | 2026-11-16 14:38 |
 | Reported by | Baseline verification, check #8 |
 | Affected | SCADA-PC1 (10.2.10.10) → DMZ-SRV1 (172.16.50.10), TCP/80 |
-| Status | Tier 1: escalated 15:24 · Root cause confirmed 15:46 · Fix applied 15:51, ICMP verified, TCP/80 pending |
+| Status | **Resolved / Closed 2026-11-16 16:10.** Network fault fixed; HTTP service fault split to [TICKET-002](./TICKET-002.md) |
 
 This ticket is written in two parts:
 - **Part 1, Tier 1 NOC:** what a NOC Analyst 1 does: confirm, scope, check reachability and routing with read-only commands, then escalate with evidence.
@@ -123,11 +123,11 @@ write memory
 Baseline config in [`../configs/DMZ-SRV1.txt`](../configs/DMZ-SRV1.txt) and the CML import file updated so a rebuild doesn't reintroduce the fault.
 
 **Verification:**
-- [ ] DMZ-SRV1 `show ip route` → `S* 0.0.0.0/0 via 172.16.50.1`
+- [x] DMZ-SRV1 default route applied (15:51)
 - [x] SCADA-PC1 `ping 172.16.50.10`: success (15:51)
-- [ ] SCADA-PC1 `telnet 172.16.50.10 80` (original symptom)
+- [x] SCADA-PC1 `telnet 172.16.50.10 80`: now **refused** instead of timed out. The connection reaches the server, so the network fault is fixed; the server's HTTP service rejects it → split to [TICKET-002](./TICKET-002.md)
 - [x] HQ-PC1 `ping 172.16.50.10`: success (15:51)
-- [ ] INET `telnet 198.51.100.10 80 /source-interface Loopback0`
+- [ ] INET `telnet 198.51.100.10 80 /source-interface Loopback0`: moved to TICKET-002 (depends on the HTTP service)
 
 **Follow-up (problem record):** HQ-PC1, RENO-PC1 and SCADA-PC1 depend on proxy ARP for the same reason. If proxy ARP is ever disabled on their gateways (a common hardening step), they will fail the same way. Recommend the same default-route fix.
 
@@ -139,3 +139,7 @@ Baseline config in [`../configs/DMZ-SRV1.txt`](../configs/DMZ-SRV1.txt) and the 
 4. **Tier 1 escalation was correct even though its suspect was wrong.** The evidence narrowed the problem to the firewall boundary; engineering found the exact cause on the far side of it.
 5. **Check both ends of the path.** Tier 1 worked from the source toward the firewall; the fault was on the destination. Checking the destination's gateway *and* its ARP/neighbor table early (`show ip route` + `show ip arp` on Cisco; `ipconfig /all` + `arp -a` on Windows; `ip route` + `ip neigh` on Linux) would have found it sooner.
 6. **A router-as-host needs a gateway of last resort.** With `ip routing` on, a static default route (`S* 0.0.0.0/0`) is what sends return traffic to the gateway; host-mode `ip default-gateway` looked correct but wasn't used.
+
+## Closure
+
+Closed 2026-11-16 16:10. The network fault (DMZ-SRV1 could not return traffic to other subnets) is resolved: ICMP from SCADA-PC1 and HQ-PC1 succeeds, and TCP/80 now gets a **refusal** instead of a timeout, which proves the connection reaches the server. The remaining HTTP service failure is a separate fault with a different owner (server team) and is tracked in [TICKET-002](./TICKET-002.md).
