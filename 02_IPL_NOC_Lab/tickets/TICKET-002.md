@@ -35,7 +35,8 @@ Same result from CORE-R2 and from DMZ-SRV1 itself.
 | 16:03 | DMZ-SRV1 | `show tcp brief all` | `0.0.0.0.80`, `::.80`, `0.0.0.0.443` LISTEN; `0.0.0.0.22` LISTEN with no TCB | Port 80 registered as listening |
 | 16:03 | DMZ-SRV1 | `telnet 172.16.50.10 80` (local) | Connection refused | Fails even locally (some IOS builds refuse self-connections, so not conclusive alone) |
 | 16:07 | SCADA-PC1, CORE-R2 | `telnet 172.16.50.10 80` | Connection refused | Rejected by the server from remote hosts |
-| 16:10 | SCADA-PC1 | `telnet 172.16.50.10 22` | Connection refused | Likely by design: SSH has no RSA keys on this lab host (confirm with `show ip ssh`). Not related to HTTP |
+| 16:10 | SCADA-PC1 | `telnet 172.16.50.10 22` | Connection refused | Expected; see next line |
+| 16:11 | DMZ-SRV1 | `show ip ssh` | `SSH Disabled - version 2.0`, no RSA/EC keys | **Confirmed:** port 22 refused because SSH isn't running (no keys). Unrelated to HTTP |
 
 Note: VTY 0 4 is `transport input ssh`, so port 23 is refused by design. Unrelated to this ticket; no change requested.
 
