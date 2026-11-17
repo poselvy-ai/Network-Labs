@@ -1,13 +1,15 @@
 # TICKET-002 — DMZ-SRV1 HTTP service refuses connections (TCP/80)
 
+> **Archived: original build (v1).** This ticket was worked on the first version of the lab, before the 2026-11-16 rebuild. The lab now starts from the v2 baseline. Kept as a record of the troubleshooting.
+
 | Field | Value |
 |-------|-------|
 | Priority | P3: one service, one server |
 | Opened | 2026-11-16 16:10 |
-| Reported by | Verification of [TICKET-001](./TICKET-001.md) |
+| Reported by | Verification of [TICKET-001](./V1-TICKET-001.md) |
 | Affected | DMZ-SRV1 (172.16.50.10 / public 198.51.100.10), HTTP TCP/80 |
 | Assigned | Server team |
-| Status | Escalated to server team · fix approved: [C-20261116002](../changes/C-20261116002.md) |
+| Status | Escalated to server team · fix approved: [C-20261116002](../../changes/archive/V1-C-20261116002.md) |
 
 ## Symptom
 
@@ -64,7 +66,7 @@ The DMZ "server" was an IOL router standing in for a web server. Its built-in HT
 
 ## Resolution
 
-Server team decision: replace DMZ-SRV1 with a real Ubuntu server, managed like a production Linux server (systemd web service, ufw host firewall, SSH restricted to 10.0.0.0/16). Normal change [C-20261116002](../changes/C-20261116002.md), window 2026-11-16 17:00–18:00.
+Server team decision: replace DMZ-SRV1 with a real Ubuntu server, managed like a production Linux server (systemd web service, ufw host firewall, SSH restricted to 10.0.0.0/16). Normal change [C-20261116002](../../changes/archive/V1-C-20261116002.md), window 2026-11-16 17:00–18:00.
 
 **Verification (after the change):**
 - [ ] SCADA-PC1 `telnet 172.16.50.10 80` → `GET / HTTP/1.0` returns `HTTP/1.0 200 OK`

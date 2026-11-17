@@ -45,4 +45,4 @@ What happened, verification output, closure.
 
 | Change | Title | Type | Status |
 |--------|-------|------|--------|
-| [C-20261116002](./C-20261116002.md) | Replace DMZ-SRV1 IOL stand-in with Ubuntu web server | Normal | Approved, pending implementation |
+| [V1-C-20261116002](./archive/V1-C-20261116002.md) | Replace DMZ-SRV1 IOL stand-in with Ubuntu web server | Normal | Superseded (built into v2 baseline) |

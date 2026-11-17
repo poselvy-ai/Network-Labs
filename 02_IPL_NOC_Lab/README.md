@@ -59,7 +59,7 @@ graph TD
 - **Internal routing:** OSPF process 1. Area 0 = core, firewall and HQ users; area 1 = Reno (dual-homed to both cores); area 2 = substation (single-homed to CORE-R2).
 - **Firewall (FW1):** inside1/inside2 (security 100) to the cores, dmz (50), outside (0). PAT for 10.0.0.0/8; static NAT for the DMZ web server to `198.51.100.10`. Injects the default route into OSPF.
 - **Internet edge (EDGE-R1, AS 65001):** eBGP to two ISPs. ISP-A is preferred outbound (local-pref 200) and inbound (AS-path prepend toward ISP-B). Advertises only `198.51.100.0/24`.
-- **Hosts:** the PCs are IOL nodes with `no ip routing` and a default gateway. **DMZ-SRV1 is an Ubuntu server** (cloud-init build) running a systemd web service on TCP/80, with ufw allowing HTTP from anywhere and SSH only from 10.0.0.0/16. Replaced the original IOL stand-in under change [C-20261116002](./changes/C-20261116002.md).
+- **Hosts:** the PCs are IOL nodes with `no ip routing` and a default gateway. **DMZ-SRV1 is an Ubuntu server** (cloud-init build) running a systemd web service on TCP/80, with ufw allowing HTTP from anywhere and SSH only from 10.0.0.0/16. Replaced the original IOL stand-in in the v2 rebuild (see [archived change](./changes/archive/V1-C-20261116002.md)).
 
 Full addressing: [`design/addressing.md`](./design/addressing.md) · Design choices: [`design/decisions.md`](./design/decisions.md)
 
@@ -88,7 +88,7 @@ Changes to in-service devices are tracked in [`changes/`](./changes).
 
 | Phase | Scope | Status |
 |-------|-------|--------|
-| 1 | OSPF core, firewall, BGP edge: baseline build | Built, baseline in progress |
+| 1 | OSPF core, firewall, BGP edge: baseline build (v2 rebuild 2026-11-16) | Rebuilt, baseline in progress |
 | 2 | Fault tickets (OSPF, BGP, firewall, Layer 2) | In progress |
 | 3 | AWS extension: IPsec VPN + BGP to a VPC (CloudFormation) | Planned |
 
@@ -98,8 +98,21 @@ Workflow and template: [`tickets/README.md`](./tickets/README.md)
 
 | Ticket | Summary | Status |
 |--------|---------|--------|
-| [TICKET-001](./tickets/TICKET-001.md) | DMZ-SRV1 unreachable from other subnets (host-mode ARP, no default route) | Closed |
-| [TICKET-002](./tickets/TICKET-002.md) | DMZ-SRV1 HTTP service refuses connections (TCP/80) | Fix scheduled: [C-20261116002](./changes/C-20261116002.md) |
+| — | No open tickets on the v2 baseline yet | — |
+
+### Archived (v1 build)
+
+| Ticket | Summary | Outcome |
+|--------|---------|---------|
+| [V1-TICKET-001](./tickets/archive/V1-TICKET-001.md) | DMZ-SRV1 unreachable from other subnets | Tier 1 escalation; root cause host-mode ARP / no default route; resolved |
+| [V1-TICKET-002](./tickets/archive/V1-TICKET-002.md) | DMZ-SRV1 HTTP service refused connections | IOL stand-in not fit as a web server; replaced with Ubuntu in v2 |
+
+## Version history
+
+| Version | Date | Change |
+|---------|------|--------|
+| v1 | 2026-11-16 | Initial build. DMZ-SRV1 was an IOL stand-in; two tickets worked (archived) |
+| v2 | 2026-11-16 | Rebuilt from scratch: DMZ-SRV1 replaced with an Ubuntu web server, fixes from v1 tickets built in |
 
 ## Lessons learned
 
