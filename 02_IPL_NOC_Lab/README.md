@@ -27,7 +27,7 @@ graph TD
   ISPB["ISP-B (backup)<br/>AS 65200"]
   EDGE["EDGE-R1<br/>AS 65001 · eBGP"]
   FW["FW1 (ASAv)<br/>Palo Alto stand-in"]
-  DMZ["DMZ-SRV1<br/>172.16.50.10 · web"]
+  DMZ["DMZ-SRV1 (Ubuntu)<br/>172.16.50.10 · web"]
   C1["CORE-R1<br/>OSPF area 0/1"]
   C2["CORE-R2<br/>OSPF area 0/1/2"]
   SW["HQ-SW1<br/>VLAN 10"]
@@ -59,7 +59,7 @@ graph TD
 - **Internal routing:** OSPF process 1. Area 0 = core, firewall and HQ users; area 1 = Reno (dual-homed to both cores); area 2 = substation (single-homed to CORE-R2).
 - **Firewall (FW1):** inside1/inside2 (security 100) to the cores, dmz (50), outside (0). PAT for 10.0.0.0/8; static NAT for the DMZ web server to `198.51.100.10`. Injects the default route into OSPF.
 - **Internet edge (EDGE-R1, AS 65001):** eBGP to two ISPs. ISP-A is preferred outbound (local-pref 200) and inbound (AS-path prepend toward ISP-B). Advertises only `198.51.100.0/24`.
-- **Hosts:** the PCs and the DMZ server are IOL nodes with `no ip routing` and a default gateway; DMZ-SRV1 runs `ip http server` so TCP/80 can be tested with `telnet`.
+- **Hosts:** the PCs are IOL nodes with `no ip routing` and a default gateway. **DMZ-SRV1 is an Ubuntu server** (cloud-init build) running a systemd web service on TCP/80, with ufw allowing HTTP from anywhere and SSH only from 10.0.0.0/16. Replaced the original IOL stand-in under change [C-20261116002](./changes/C-20261116002.md).
 
 Full addressing: [`design/addressing.md`](./design/addressing.md) · Design choices: [`design/decisions.md`](./design/decisions.md)
 
@@ -68,19 +68,21 @@ Full addressing: [`design/addressing.md`](./design/addressing.md) · Design choi
 | Area | Nodes | Count |
 |------|-------|------:|
 | Internet | INET, ISP-A, ISP-B | 3 |
-| Edge / security | EDGE-R1, FW1, DMZ-SRV1 | 3 |
+| Edge / security | EDGE-R1, FW1, DMZ-SRV1 (Ubuntu) | 3 |
 | Core / sites | CORE-R1, CORE-R2, RENO-R1, SUB-R1, HQ-SW1 | 5 |
 | Test hosts | HQ-PC1, RENO-PC1, SCADA-PC1 | 3 |
 | **Total** | | **14** |
 
 ## Build and run
 
-1. CML 2.9 with the main refplat ISO (IOL, IOL-L2, ASAv). Host VM: 8 vCPU, 20 GB RAM.
+1. CML 2.9 with the main refplat ISO (IOL, IOL-L2, ASAv, Ubuntu). Host VM: 8 vCPU, 20 GB RAM.
 2. Import [`configs/IPL-NOC-Baseline.yaml`](./configs/IPL-NOC-Baseline.yaml) and start the lab. FW1 (ASAv) takes 3–5 minutes to boot.
 3. FW1 asks you to set an enable password the first time you type `enable`. Then `write memory`.
 4. Run the baseline checks in [`verification/baseline.md`](./verification/baseline.md) before working any ticket.
 
-Per-device baseline configs are in [`configs/`](./configs).
+Per-device baseline configs are in [`configs/`](./configs). DMZ-SRV1 builds from [`configs/DMZ-SRV1-cloud-init.yaml`](./configs/DMZ-SRV1-cloud-init.yaml) (admin user `srvadmin`; change the lab password at first login).
+
+Changes to in-service devices are tracked in [`changes/`](./changes).
 
 ## Phases
 
@@ -97,7 +99,7 @@ Workflow and template: [`tickets/README.md`](./tickets/README.md)
 | Ticket | Summary | Status |
 |--------|---------|--------|
 | [TICKET-001](./tickets/TICKET-001.md) | DMZ-SRV1 unreachable from other subnets (host-mode ARP, no default route) | Closed |
-| [TICKET-002](./tickets/TICKET-002.md) | DMZ-SRV1 HTTP service refuses connections (TCP/80) | Open, server team |
+| [TICKET-002](./tickets/TICKET-002.md) | DMZ-SRV1 HTTP service refuses connections (TCP/80) | Fix scheduled: [C-20261116002](./changes/C-20261116002.md) |
 
 ## Lessons learned
 

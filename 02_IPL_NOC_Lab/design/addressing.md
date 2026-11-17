@@ -79,7 +79,7 @@ Convention: the second octet is the site (0 = core/HQ, 1 = Reno, 2 = substation)
 | HQ-PC1 | E0/0 | 10.0.10.10/24 | HQ-SW1 | E0/1 | Default gateway 10.0.10.1 |
 | RENO-PC1 | E0/0 | 10.1.10.10/24 | RENO-R1 | E0/2 | Default gateway 10.1.10.1 |
 | SCADA-PC1 | E0/0 | 10.2.10.10/24 | SUB-R1 | E0/1 | Default gateway 10.2.10.1 |
-| DMZ-SRV1 | E0/0 | 172.16.50.10/24 | FW1 | Gi0/3 (dmz) | Default gateway 172.16.50.1 |
+| DMZ-SRV1 (Ubuntu) | ens2 (en*) | 172.16.50.10/24 | FW1 | Gi0/3 (dmz) | Default route via 172.16.50.1 |
 
 ## Router IDs and AS numbers
 

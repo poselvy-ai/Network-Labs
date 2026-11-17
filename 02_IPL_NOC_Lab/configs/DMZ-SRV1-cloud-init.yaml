@@ -1,0 +1,58 @@
+#cloud-config
+# DMZ-SRV1 - Ubuntu web server (CML "Ubuntu" node, paste into the node's Config tab)
+# Lab-only credentials: change the password at first login with `passwd`.
+hostname: dmz-srv1
+fqdn: dmz-srv1.ipl.lab
+manage_etc_hosts: true
+users:
+  - name: srvadmin
+    gecos: IPL Server Admin
+    groups: [sudo]
+    shell: /bin/bash
+    lock_passwd: false
+    plain_text_passwd: IPLlab!2026
+ssh_pwauth: true
+write_files:
+  - path: /etc/netplan/60-dmz.yaml
+    permissions: '0600'
+    content: |
+      network:
+        version: 2
+        ethernets:
+          dmz0:
+            match:
+              name: "en*"
+            dhcp4: false
+            addresses: [172.16.50.10/24]
+            routes:
+              - to: default
+                via: 172.16.50.1
+            nameservers:
+              addresses: [8.8.8.8]
+  - path: /var/www/ipl/index.html
+    content: |
+      <html><head><title>IPL Customer Portal</title></head>
+      <body><h1>Ironwood Power &amp; Light</h1><p>DMZ-SRV1 customer portal (lab)</p></body></html>
+  - path: /etc/systemd/system/ipl-web.service
+    content: |
+      [Unit]
+      Description=IPL customer portal (lab web service)
+      After=network-online.target
+      Wants=network-online.target
+
+      [Service]
+      ExecStart=/usr/bin/python3 -m http.server 80 --directory /var/www/ipl
+      Restart=on-failure
+
+      [Install]
+      WantedBy=multi-user.target
+runcmd:
+  - rm -f /etc/netplan/50-cloud-init.yaml
+  - netplan apply
+  - systemctl daemon-reload
+  - systemctl enable --now ipl-web.service
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow 80/tcp
+  - ufw allow from 10.0.0.0/16 to any port 22 proto tcp
+  - ufw --force enable

@@ -7,7 +7,7 @@
 | Reported by | Verification of [TICKET-001](./TICKET-001.md) |
 | Affected | DMZ-SRV1 (172.16.50.10 / public 198.51.100.10), HTTP TCP/80 |
 | Assigned | Server team |
-| Status | Open, escalated to server team |
+| Status | Escalated to server team · fix approved: [C-20261116002](../changes/C-20261116002.md) |
 
 ## Symptom
 
@@ -60,8 +60,12 @@ DMZ-SRV1 is an IOL router standing in for a web server. Its built-in HTTP servic
 
 ## Root cause
 
-_TBD_
+The DMZ "server" was an IOL router standing in for a web server. Its built-in HTTP service refused every connection, locally and remotely, even though port 80 was registered as listening. A router's management web service is not a production web server; the stand-in was not fit for the role.
 
 ## Resolution
 
-_TBD_ · Verification: SCADA-PC1 `telnet 172.16.50.10 80` opens; INET `telnet 198.51.100.10 80 /source-interface Loopback0` opens.
+Server team decision: replace DMZ-SRV1 with a real Ubuntu server, managed like a production Linux server (systemd web service, ufw host firewall, SSH restricted to 10.0.0.0/16). Normal change [C-20261116002](../changes/C-20261116002.md), window 2026-11-16 17:00–18:00.
+
+**Verification (after the change):**
+- [ ] SCADA-PC1 `telnet 172.16.50.10 80` → `GET / HTTP/1.0` returns `HTTP/1.0 200 OK`
+- [ ] INET `telnet 198.51.100.10 80 /source-interface Loopback0` opens
