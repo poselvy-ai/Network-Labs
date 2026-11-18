@@ -11,6 +11,28 @@ Tickets in this lab follow the **[Incident Response Playbook](https://github.com
 | Notifications and status updates | [Communication Templates](https://github.com/poselvy-ai/Incident-Response-Playbook/blob/main/Communication-Template.md) |
 | Post-incident review (required SEV-1/SEV-2, optional SEV-3) | [RCA Template](https://github.com/poselvy-ai/Incident-Response-Playbook/blob/main/RCA-Template.md) |
 
+## Roles and scope
+
+I work every ticket as **NOC Analyst 1 (Tier 1)**. If I can't resolve it within Tier 1 scope, I escalate with evidence.
+
+| Tier 1 can do | Tier 1 escalates |
+|---------------|------------------|
+| Read-only checks: `show`, `ping`, `traceroute`, `telnet <ip> <port>`, logs | Firewall policy, NAT, captures, `packet-tracer` (unless a runbook says so) |
+| Classify severity, open the incident, send playbook communications | Routing design or protocol config changes (OSPF, BGP) |
+| Standard changes in the runbook: `shutdown`/`no shutdown` a port, clear counters, bounce an err-disabled port | Server or application config (OS, services, host firewall) |
+| Confirm the fix and close Tier 1 tickets | ISP / carrier circuit faults |
+
+**Escalation targets** (played by Claude in the lab):
+
+| Team | Owns |
+|------|------|
+| NOC Engineer (Tier 2) | Routing, switching, deeper network isolation |
+| Firewall / Security team | FW1 policy, NAT, VPN, security events |
+| Server team | DMZ-SRV1 and other hosts |
+| ISP / carrier | ISP-A, ISP-B circuits and peering |
+
+An escalation is complete when it states: what was reported, what I tested (commands + output), what I ruled out, the suspected area, severity, and impact.
+
 ## How a ticket is worked
 
 Each ticket is worked like a NOC shift: alert → classify → triage → isolate → fix or escalate → communicate → document.
