@@ -94,6 +94,8 @@ Changes to in-service devices are tracked in [`changes/`](./changes).
 
 ## Tickets
 
+Incidents are classified, escalated and communicated with the **[Incident Response Playbook](https://github.com/poselvy-ai/Incident-Response-Playbook)** (SEV-1 = most severe, ITIL P1–P5).
+
 Workflow and template: [`tickets/README.md`](./tickets/README.md)
 
 | Ticket | Summary | Status |
