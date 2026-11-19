@@ -83,7 +83,7 @@ Full addressing: [`design/addressing.md`](./design/addressing.md) · Design choi
 
 Per-device baseline configs are in [`configs/`](./configs). DMZ-SRV1 builds from [`configs/DMZ-SRV1-cloud-init.yaml`](./configs/DMZ-SRV1-cloud-init.yaml) (admin user `srvadmin`; change the lab password at first login).
 
-Changes to in-service devices are tracked in [`changes/`](./changes).
+Changes to in-service devices are tracked in [`changes/`](./changes). Label/documentation mismatches are in [`known-discrepancies.md`](./known-discrepancies.md): read at the start of each shift.
 
 ## Phases
 
