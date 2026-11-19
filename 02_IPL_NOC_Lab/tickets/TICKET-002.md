@@ -79,6 +79,55 @@ HQ-PC1>ping 8.8.8.8
 Success rate is 100 percent (5/5), round-trip min/avg/max = 4/12/29 ms
 ```
 
+**2026-11-18 18:14 · Patrick Selvy**
+```
+Assessment. We have a BGP configuration problem on ISP-A port E0/0. Next step will be to either escalate to the carrier as they would fix correct the BGP issue on their router
+
+EDGE-R1 -> ISP-A
+Neighbor 203.0.113.1 shows flapping.
+Int E0/2 (203.0.113.2/30) is UP
+Unable to ping ISP-A E0/0 ISP-A eBGP AS 65011
+
+LOG
+EDGE-R1#show log | include BGP | neighbor 203.0.113.1
+*Nov 18 23:04:53.326: %BGP-5-ADJCHANGE: neighbor 203.0.113.1 Up
+*Nov 19 01:34:42.390: %BGP-3-NOTIFICATION: sent to neighbor 203.0.113.1 4/0 (hold time expired) 0 bytes
+*Nov 19 01:34:42.392: %BGP-5-NBR_RESET: Neighbor 203.0.113.5 reset (BGP Notification sent)
+*Nov 19 01:34:42.392: %BGP-5-NBR_RESET: Neighbor 203.0.113.1 reset (BGP Notification sent)
+*Nov 19 01:34:42.440: %BGP-5-ADJCHANGE: neighbor 203.0.113.1 Down BGP Notification sent
+*Nov 19 01:34:42.440: %BGP_SESSION-5-ADJCHANGE: neighbor 203.0.113.1 IPv4 Unicast topology base removed from session  BGP Notification sent
+*Nov 19 01:34:42.440: %BGP-5-ADJCHANGE: neighbor 203.0.113.5 Down BGP Notification sent
+*Nov 19 01:34:42.440: %BGP_SESSION-5-ADJCHANGE: neighbor 203.0.113.5 IPv4 Unicast topology base removed from session  BGP Notification sent
+*Nov 19 01:34:49.619: %BGP-5-ADJCHANGE: neighbor 203.0.113.1 Up
+
+EDGE-R1#show ip int br
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            203.0.113.2     YES TFTP   up                    up
+Ethernet0/1            203.0.113.6     YES TFTP   up                    up
+Ethernet0/2            198.51.100.1    YES TFTP   up                    up
+Ethernet0/3            unassigned      YES unset  administratively down down
+*Nov 19 01:38:51.788: %BGP-3-NOTIFICATION: sent to neighbor 203.0.113.1 4/0 (hold time expired) 0 bytes
+*Nov 19 01:38:51.788: %BGP-5-NBR_RESET: Neighbor 203.0.113.1 reset (BGP Notification sent)
+*Nov 19 01:38:51.788: %BGP-5-ADJCHANGE: neighbor 203.0.113.1 Down BGP Notification sent
+*Nov 19 01:38:51.788: %BGP_SESSION-5-ADJCHANGE: neighbor 203.0.113.1 IPv4 Unicast topology base removed from session  BGP Notification sent
+
+EDGE-R1#Ping 203.0.113.1
+.....
+Success rate is 0 percent (0/5)
+
+EDGE-R1 ->ISP-B
+ISP-B to EDGE-R1 is Up - cant find its neighbor.
+EDGE-R1 port E0/1 - is UP
+Successfully ping ISP-B eBGP AS65200
+
+LOG:
+EDGE-R1#show log | include BGP | neighbor 203.0.113.6
+[same 01:34:42 and 01:38:51 entries as above]
+
+EDGE-R1#Ping 203.0.113.6
+!!!!!
+```
+
 ## Troubleshooting log
 
 | Time (PST) | Device | Command | Result | Conclusion |
@@ -87,6 +136,10 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 4/12/29 ms
 | 17:51 | HQ-PC1 (NOC) | `ping 172.16.50.10` | 5/5 | DMZ web server reachable |
 | 17:57 | HQ-PC1 (NOC) | `traceroute 8.8.8.8` | Hop 1 10.0.10.1 (CORE-R1), then `* * *` to hop 30 | Expected: FW1 (ASA) hides itself and doesn't pass ICMP time-exceeded from outside routers, so a trace from inside can't show the ISP path. Not a fault |
 | 17:57 | HQ-PC1 (NOC) | `ping 8.8.8.8` | 5/5, 4/12/29 ms | Internet (AS 65300) still reachable |
+| 18:14 | EDGE-R1 | `show logging \| include BGP` | 01:34:42 UTC (17:34:42 PST): hold time expired to .1, **both** ISP-A and ISP-B sessions reset; .1 back Up 01:34:49. **01:38:51 UTC (17:38:51 PST): hold time expired to 203.0.113.1, session Down** | ISP-A session down since 17:38:51 PST (BGP hold timer = 180 s, so traffic from ISP-A stopped ≈17:35:51). Earlier reset of both sessions at 17:34:42 unexplained |
+| 18:14 | EDGE-R1 | `show ip interface brief` | E0/0 (203.0.113.2, to ISP-A) up/up; E0/1 (203.0.113.6, to ISP-B) up/up | Our side of the ISP-A link is up |
+| 18:14 | EDGE-R1 | `ping 203.0.113.1` | 0/5 | No IP reachability to the ISP-A peer across an up/up link: points to the carrier side |
+| 18:14 | EDGE-R1 | `ping 203.0.113.6` | 5/5 | This is EDGE-R1's **own** E0/1 address; does not test ISP-B (peer is 203.0.113.5) |
 
 ## Root cause
 _TBD_
