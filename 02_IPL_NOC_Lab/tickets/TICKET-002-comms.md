@@ -15,6 +15,8 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 | [C7](#c7) | 18:36 | Analyst → ISP-A NOC | ISPA-INC-88213 (circuit ID, account, AS) |
 | [C8](#c8) | 18:38 | ISP-A NOC → Analyst | Fault found on ISP-A side; restored, please confirm |
 | [C9](#c9) | 18:45 | Ops Lead → Analyst | Traceroute from inside: by design |
+| [C10](#c10) | 18:45 | Analyst → ISP-A NOC | ISPA-INC-88213: BGP confirmed up; keep open 72 h |
+| [C11](#c11) | 18:50 | ISP-A NOC → Analyst | Ticket set to monitoring 72 h; RFO to follow |
 
 ---
 
@@ -138,6 +140,26 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 **Time:** 2026-11-18 18:45 · **From:** Ops Lead · **To:** Patrick S.
 
 > Good question to ask instead of chasing it. Yes, by design: FW1 doesn't show up in a traceroute and doesn't pass the outside routers' time-exceeded replies back in, so from inside you'll only ever see hop 1. To see the ISP path, run the trace from EDGE-R1 with `source 198.51.100.1`. Nice work on the verification. Confirm with ISP-A, send me the 19:00 update with your recommendation.
+
+### C10
+**Time:** 2026-11-18 18:45 · **From:** IPL NOC · **To:** noc@isp-a.example
+**Subject:** ISPA-INC-88213
+
+> Hello ISP-A NOC
+>
+> We have confirmed BPG is up.
+>
+> Please leave the ticket open for 72 hours then close.
+>
+> Thank you.
+
+### C11
+**Time:** 2026-11-18 18:50 · **From:** ISP-A NOC · **To:** IPL NOC
+**Subject:** RE: ISPA-INC-88213 — monitoring
+
+> Thanks for confirming. ISPA-INC-88213 is now in **Monitoring** for 72 hours and will close automatically on 2026-11-21 18:50 PST unless the circuit alarms again. The RFO for the maintenance error will be sent within 2 business days to the contact on your account. Reply to this ticket if you see any further issues.
+>
+> ISP-A NOC · +1-555-0100
 
 ---
 
