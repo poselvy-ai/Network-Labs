@@ -10,7 +10,7 @@
 | Affected | SCADA-PC1 (10.2.10.10), Substation 1 feeder telemetry |
 | Analyst | Patrick Selvy, NOC Analyst 1 |
 | Incident Commander | Ops Lead |
-| Status | **Resolved, monitoring.** Service restored 15:34 PST. Security escalation and RCA open |
+| Status | **Resolved, monitoring.** Service restored 15:34 PST. Security escalation with IC; [RCA](./TICKET-001-RCA.md) open pending Security review |
 
 > Device logs are in **UTC**. Times in this ticket are **PST (UTC−8)**. Where a device log exists, it is the source of truth for event times; times marked ≈ are reconstructed from the order of events.
 
@@ -98,6 +98,7 @@ Note: the ticket would be stronger with the path evidence that led to SUB-R1 (`p
 | 15:50 | Status update to Ops Lead; IC marks Resolved, monitoring | Comms |
 | 15:52 | Post-fix verification and log collection | `show ip int brief`, `show logging` |
 | 16:17 | Reachability confirmed from the core (CORE-R2 → SCADA-PC1) | `ping` |
+| 16:43 | RCA draft and findings sent to IC; Security escalation handed to IC | Comms |
 
 **Key measures:** time to detect 11 s · time to acknowledge (customer) ≈7 min after the call · time to restore 14 min 31 s from fault (14 min 20 s from alert).
 
@@ -121,13 +122,11 @@ Re-enabled SUB-R1 Ethernet0/1 (`no shutdown`) at 15:34 PST, a Tier 1 standard ch
 
 ## Escalation (open)
 
-**To:** Security team · **Status:** _to be sent by the analyst_
-
-Unattributed console change on SUB-R1 (SCADA network) at 15:19:49 PST, no approved change. Request review of console access and assessment as a possible security incident.
+**16:43:** Analyst reported the findings to the IC (log evidence, no console authentication, unsynchronized clock) and left the escalation decision with the IC, since the settings may be by design. **IC escalated to the Security team:** unattributed console change on SUB-R1 (SCADA network) at 15:19:49 PST with no approved change; review console access and assess as a possible security incident.
 
 ## RCA
 
-**Required** (SEV-2). Use the [playbook RCA template](https://github.com/poselvy-ai/Incident-Response-Playbook/blob/main/RCA-Template.md). Due 2026-11-19 15:00 PST.
+**Required** (SEV-2). [TICKET-001 RCA](./TICKET-001-RCA.md): drafted by the analyst ([original draft](./TICKET-001-RCA-analyst-draft.txt)), reviewed and completed by the IC. Preliminary root cause: unapproved console change on a device with no console authentication. Final root cause pending the Security review (2026-11-20).
 
 ## Coaching notes (lab)
 

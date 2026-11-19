@@ -1,0 +1,96 @@
+RCA
+
+TICKET-001
+Date: 11/18/26
+Start Time: 15:22 PST
+End Time: 15:34 PST
+Severity (SEV-1 to SEV-5): SEV-2
+Systems Impacted: SCADA-PC1
+Business Impact Summary: IPL lost control of the SCADA station on substation 1, affecting ability to monitor the electrical grid. 
+
+15:20 SolarWinds detects SCADA-PC1 (10.2.10.10). ICMP polls failing, 3 consecutive. Site: Substation 1.
+15:22 NOC Receives call from Substation 1 informing us they lost telemetry to the site. 
+15:29 NOC Analysis Selvy creates ticket engages with Ops Leads, engages customer, and start to investigate
+15:29 NOC Leads Escalate the ticket to SEV-2 and engaged management. 
+15:32 NOC Analysis discovers SUB-R1 E0/1 administratively downed
+15:34 NOC Analysis administratively UP SUB-R1 E0/1
+15:35 NOC Analysis verifies from CORE_R2 can reach SCADA_PC1
+15:44 Customer confirms the restoration of service
+15:45 Ops Leads confirm restoration
+
+
+
+Impact Analysis: 
+
+User Impact:
+User were not able to use the SCADA system to monitor the health of the substation 1. 
+
+System Impact:
+The logs showed that we are not able to monitor who made the change or when the change was made effectively. 
+
+Business Impact:
+IPL was at risk of financial, government regulatory, and safety impact while the port was shut down. 
+
+
+
+Root Cause:
+SUB-R1 E0/1 administratively downed preventing SCADA-PC1 to communicate
+
+Contributing Factors:
+No authentication to SUB-R1 to determine who the changed the port to down. 
+
+Detection & Monitoring:
+
+The incident was first detected by SolarWinds at 15:20 prior to the call at 15:22 by the customer. The TICKET was created at 15:24 per the ticket which is within standards. No required improvement at this time. 
+
+Response:
+
+Technician was responded well to the ticket, but did not properly categorize the severity. Ops leads did escalate correctly bringing the ticket within standard. No bridge was used for this ticket. 
+
+Correction Action:
+Enable the SUB-R1 E0/1 
+
+Preventive Measure
+Enable Security Authorization on all switches and routers. 
+Sync time with NTP service. 
+
+
+Evidence 
+
+Before Change:
+SUB-R1#show ip int bri
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            10.2.0.2        YES TFTP   up                    up      
+Ethernet0/1            10.2.10.1       YES TFTP   administratively down down    
+Ethernet0/2            unassigned      YES unset  administratively down down    
+Ethernet0/3            unassigned      YES unset  administratively down down    
+Loopback0              10.255.255.4    YES TFTP   up                    up      
+
+
+After Change: 
+SUB-R1#show ip int br
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            10.2.0.2        YES TFTP   up                    up      
+Ethernet0/1            10.2.10.1       YES TFTP   up                    up      
+Ethernet0/2            unassigned      YES unset  administratively down down    
+Ethernet0/3            unassigned      YES unset  administratively down down    
+Loopback0              10.255.255.4    YES TFTP   up                    up      
+
+
+SUB-R1
+*Nov 18 23:06:11.692: %SYS-5-CONFIG_I: Configured from unix:config by console
+*Nov 18 23:06:12.775: %LINK-3-UPDOWN: Interface Ethernet0/1, changed state to up
+*Nov 18 23:06:13.776: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/1, changed state to up
+*Nov 18 23:19:41.894: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0
+*Nov 18 23:19:49.002: %SYS-5-CONFIG_I: Configured from console by console
+*Nov 18 23:19:49.389: %LINK-5-CHANGED: Interface Ethernet0/1, changed state to administratively down
+*Nov 18 23:19:50.389: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/1, changed state to down
+*Nov 18 23:34:20.635: %LINK-3-UPDOWN: Interface Ethernet0/1, changed state to up
+*Nov 18 23:34:21.636: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/1, changed state to up
+*Nov 18 23:34:49.721: %SYS-5-CONFIG_I: Configured from console by console
+
+
+
+
+RCA Closure date: 
+
