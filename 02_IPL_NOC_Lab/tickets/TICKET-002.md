@@ -45,6 +45,8 @@ Full emails and replies: **[TICKET-002 communications log](./TICKET-002-comms.md
 | [C4](./TICKET-002-comms.md#c4) | 18:28 | Ops Lead → Analyst | 18:21 update overdue |
 | [C5](./TICKET-002-comms.md#c5) | 18:30 | Analyst → Ops Lead | Working with carrier; circuit ID requested |
 | [C6](./TICKET-002-comms.md#c6) | 18:32 | Ops Lead → Analyst | Circuit ID and account provided; next update 19:00 |
+| [C7](./TICKET-002-comms.md#c7) | 18:36 | Analyst → ISP-A NOC | Circuit ID, account, AS numbers |
+| [C8](./TICKET-002-comms.md#c8) | 18:44 | ISP-A NOC → Analyst | Their interface was shut in error during maintenance; restored 18:44; please confirm |
 
 ## Work notes (as entered by the analyst)
 

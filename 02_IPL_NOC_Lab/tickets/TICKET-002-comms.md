@@ -12,6 +12,8 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 | [C4](#c4) | 18:28 | Ops Lead → Analyst | Update overdue |
 | [C5](#c5) | 18:30 | Analyst → Ops Lead | EDGE-R1 BGP idle to ISP-A, over Utilized ISP-B - Working |
 | [C6](#c6) | 18:32 | Ops Lead → Analyst | Circuit ID and account provided |
+| [C7](#c7) | 18:36 | Analyst → ISP-A NOC | ISPA-INC-88213 (circuit ID, account, AS) |
+| [C8](#c8) | 18:44 | ISP-A NOC → Analyst | Fault found on ISP-A side; restored, please confirm |
 
 ---
 
@@ -100,6 +102,36 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 **Time:** 2026-11-18 18:32 · **From:** Ops Lead · **To:** Patrick S.
 
 > Thanks for the update and for asking. ISP-A circuit **ISPA-ETH-0451-IPL**, account **IPL-77310**. It's in the carrier contacts doc (design/carrier-contacts.md); bookmark it, you'll need it every carrier call. One correction before you reply to them: ISP-A is **AS 65100**, we're 65001. Send them the circuit ID, our interface status, the failed ping and a callback number, and copy me. Next update to me by 19:00.
+
+### C7
+**Time:** 2026-11-18 18:36 · **From:** IPL NOC · **To:** noc@isp-a.example
+**Subject:** ISPA-INC-88213
+
+> Hello ISPA NOC
+>
+> Circuit ID: ISPA-ETH-0451-IPL
+> Account Number: IPL-77310
+>
+> Please check your records again we are showing your IP is 203.0.113.1 and AS is 651000, our corresponding AS is 65001 and IP 203.0.113.2.
+>
+> Thank you.
+> IPL NOC
+
+### C8
+**Time:** 2026-11-18 18:44 · **From:** ISP-A NOC (Tier 2) · **To:** IPL NOC
+**Subject:** RE: ISPA-INC-88213 — fault found, service restored, please confirm
+
+> Hello IPL NOC,
+>
+> Thanks, circuit ISPA-ETH-0451-IPL located. (For our records: we're AS 65100; the 651000 in your note looks like a typo.)
+>
+> **Finding:** our customer-facing interface toward you (203.0.113.1) was **administratively shut down** at approximately 17:35 PST during unrelated maintenance on our PE router. An engineer applied a change to the wrong port. Our change team is reviewing it.
+>
+> **Action:** interface re-enabled at **18:44 PST**. We see ARP for 203.0.113.2 again.
+>
+> Please confirm your BGP session to 203.0.113.1 is Established and you're receiving routes. We'll keep ISPA-INC-88213 open until you confirm, and send an RFO (reason for outage) within 2 business days.
+>
+> ISP-A NOC · +1-555-0100
 
 ---
 
