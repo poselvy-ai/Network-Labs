@@ -37,6 +37,8 @@ An escalation is complete when it states: what was reported, what I tested (comm
 
 Log as you go. Any message to Claude that starts with **`TICKET-xxx Note:`** or **`TICKET-xxx Log:`** is added to that ticket's **Work notes** in GitHub straight away, **verbatim**, stamped with the time it was sent (as a ticketing system timestamps a work note), and confirmed in one line. Two records are kept side by side: **work notes** are the record of what the analyst did and when it was recorded; **device logs (UTC)** are the record of what the equipment did.
 
+**Communications are linked to the ticket.** Every email or message sent or received about a ticket (customer, Ops Lead, other teams) is filed in full in `TICKET-xxx-comms.md` with time, from, to and subject, and listed in the ticket's Communications table, like a ticketing system's activity stream.
+
 **Forgot to log a step?** Send **`TICKET-xxx Late Log:`** with roughly when it happened. It's recorded as a **late entry** with two times, when it happened and when it was recorded (e.g. `≈15:33 (late entry, recorded 15:58)`). The "happened" time comes from evidence: `show logging`, `show history`, terminal scrollback or monitoring timestamps; otherwise it's marked approx. Original entries are never rewritten or backdated.
 
 ## How a ticket is worked

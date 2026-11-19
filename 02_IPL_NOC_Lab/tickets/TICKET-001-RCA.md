@@ -221,7 +221,7 @@ CORE-R2#ping 10.2.10.10
 Success rate is 80 percent (4/5), round-trip min/avg/max = 1/1/2 ms
 ```
 
-Full incident record: [TICKET-001](./TICKET-001.md)
+Full incident record: [TICKET-001](./TICKET-001.md) · All communications: [TICKET-001 communications log](./TICKET-001-comms.md)
 
 ---
 

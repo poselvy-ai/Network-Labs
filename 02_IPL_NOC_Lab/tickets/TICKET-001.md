@@ -36,17 +36,21 @@ Substation 1 operators lost local visibility of feeder telemetry for about 14.5 
 
 ## Communications
 
-| Time (PST) | From → To | Template | Message |
-|------------|-----------|----------|---------|
-| 15:29 | Analyst → Substation 1 | Initial notification | *"Hello Substation, We acknowledge that your have lost telemetry to your work station and we are currently investigation the issue. We get back to shortly with an update."* |
-| 15:29 | Analyst → Ops Lead | Initial notification | *"Substation 1 is not able to see telemetry at their works station. I have open of a P3 Investigation TICKET-001 to start my investigation and work with the appropriate teams. I will follow up shortly with an update."* |
-| 15:29 | Ops Lead → Analyst | — | *"Raising this to SEV-2 (P2) and taking Incident Commander. At a utility, a SCADA outage is never routine. Find out whether the control center also lost this substation's telemetry; if they did, we're SEV-1 and I'm paging leadership. Updates every 15 minutes. Start troubleshooting now."* |
-| 15:44 | Analyst → Substation 1 | Resolution / verify | *"We have found that a port was shut down preventing the SCADA-PC1 not to be reached on the network. The NOC has turned up the port restoring the communication path. Please verify you are now seeing telemetry on SCADA-PC1."* |
-| 15:44 | Substation 1 → Analyst | — | *"Yes, telemetry is back. We see all feeders. Thanks."* |
-| 15:45 | Ops Lead → Analyst | — | *Asked whether logs and the change calendar were checked before re-enabling the port (administratively down = a manual change; could be field work in progress or an unauthorized change). Noted the 15:45 update was due.* |
-| 15:45 | Analyst → Ops Lead | — | *"As we are at SEV-2 the priority is to restore service first."* (Accepted: ITIL restore-first. Note added: for manual changes on OT networks, a 30-second log/change check before reversing is good practice.) |
-| 15:50 | Analyst → Ops Lead | Status update | *"I have found that on SUB-R1 port E0/1 (10.2.10.1/24) was administratively downed, and have amined up the port. I have confirmed with the customer the telemetry has been restored to SCADA-PC1. I am deescalating the issue to SEV-4, while I prep the RCA and finishing gathering logs."* |
-| 15:50 | Ops Lead → Analyst | — | *"Good work getting the substation back fast. Confirmed restored. As IC, I'll make the severity call: marking Resolved, monitoring; severity of record stays SEV-2, which is why the RCA is required. Get me the logs and open the escalation to Security on who shut that port. RCA draft by tomorrow 15:00."* |
+Full emails and replies, in order: **[TICKET-001 communications log](./TICKET-001-comms.md)**
+
+| # | Time | From → To | Subject / type |
+|---|------|-----------|----------------|
+| [C1](./TICKET-001-comms.md#c1) | 15:29 | Analyst → Substation 1 | Initial notification |
+| [C2](./TICKET-001-comms.md#c2) | 15:29 | Analyst → Ops Lead | Initial notification (P3) |
+| [C3](./TICKET-001-comms.md#c3) | 15:29 | Ops Lead → Analyst | Raised to SEV-2, IC assigned |
+| [C4](./TICKET-001-comms.md#c4) | 15:44 | Analyst → Substation 1 | Port restored, please verify |
+| [C5](./TICKET-001-comms.md#c5) | 15:44 | Substation 1 → Analyst | Telemetry restored |
+| [C6](./TICKET-001-comms.md#c6) | 15:45 | Ops Lead → Analyst | Logs / change check query |
+| [C7](./TICKET-001-comms.md#c7) | 15:45 | Analyst → Ops Lead | Restore first at SEV-2 |
+| [C8](./TICKET-001-comms.md#c8) | 15:50 | Analyst → Ops Lead | Status update, proposed SEV-4 |
+| [C9](./TICKET-001-comms.md#c9) | 15:50 | Ops Lead → Analyst | Resolved, monitoring; RCA required |
+| [C10](./TICKET-001-comms.md#c10) | 16:43 | Analyst → Ops Lead | Restoration and closure + RCA draft |
+| [C11](./TICKET-001-comms.md#c11) | 16:49 | Ops Lead → Analyst | RCA review; escalated to Security |
 
 ## Work notes (as entered by the analyst)
 
