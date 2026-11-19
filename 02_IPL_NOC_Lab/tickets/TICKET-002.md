@@ -25,7 +25,7 @@ No calls from users or sites.
 
 ## Impact
 
-No user impact observed: internet reachable from the NOC. Internet edge running on the backup ISP only (**redundancy lost**).
+No user impact observed: internet reachable from the NOC. Internet edge running on the backup ISP only (**redundancy lost**). Failover to ISP-B confirmed (18:18).
 
 ## Severity history
 
@@ -128,6 +128,28 @@ EDGE-R1#Ping 203.0.113.6
 !!!!!
 ```
 
+**2026-11-18 18:18 · Patrick Selvy**
+```
+Logs:
+EDGE-R1#show bgp sum
+% Command accepted but obsolete, unreleased or unsupported; see documentation.
+BGP router identifier 198.51.100.1, local AS number 65001
+[...]
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+203.0.113.1     4        65100       0       0        1    0    0 00:38:08 Active
+203.0.113.5     4        65200      53      51       20    0    0 00:42:10        4
+EDGE-R1#show ip bgp 8.8.8.8
+BGP routing table entry for 8.8.8.8/32, version 18
+Paths: (1 available, best #1, table default)
+  65200 65300
+    203.0.113.5 from 203.0.113.5 (100.64.2.1)
+      Origin IGP, localpref 100, valid, external, best
+      Updated on Nov 19 2026 01:35:20 UTC
+EDGE-R1#ping 203.0.113.5
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
+```
+
 ## Troubleshooting log
 
 | Time (PST) | Device | Command | Result | Conclusion |
@@ -140,6 +162,9 @@ EDGE-R1#Ping 203.0.113.6
 | 18:14 | EDGE-R1 | `show ip interface brief` | E0/0 (203.0.113.2, to ISP-A) up/up; E0/1 (203.0.113.6, to ISP-B) up/up | Our side of the ISP-A link is up |
 | 18:14 | EDGE-R1 | `ping 203.0.113.1` | 0/5 | No IP reachability to the ISP-A peer across an up/up link: points to the carrier side |
 | 18:14 | EDGE-R1 | `ping 203.0.113.6` | 5/5 | This is EDGE-R1's **own** E0/1 address; does not test ISP-B (peer is 203.0.113.5) |
+| 18:18 | EDGE-R1 | `show bgp summary` (`show ip bgp summary` is the current form) | ISP-A 203.0.113.1: **Active**, 0 msgs, down 00:38:08. ISP-B 203.0.113.5: **Established**, up 00:42:10, **4 prefixes** received | ISP-A session down (Active = retrying, no TCP session). ISP-B healthy |
+| 18:18 | EDGE-R1 | `show ip bgp 8.8.8.8` | 1 path: AS path 65200 65300 via **203.0.113.5**, localpref 100, best | **Failover confirmed:** internet traffic using ISP-B. Normal ISP-A path (localpref 200) gone |
+| 18:18 | EDGE-R1 | `ping 203.0.113.5` | 5/5 | ISP-B peer reachable |
 
 ## Root cause
 _TBD_
