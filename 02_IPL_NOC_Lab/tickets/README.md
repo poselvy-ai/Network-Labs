@@ -35,7 +35,7 @@ An escalation is complete when it states: what was reported, what I tested (comm
 
 ## Logging convention
 
-Log as you go. Any message to Claude that starts with **`TICKET-xxx Note:`** or **`TICKET-xxx Log:`** is added to that ticket's troubleshooting log in GitHub straight away, with the time it was sent and the output as pasted, and confirmed in one line. Event times are then checked against device logs (UTC), which are the source of truth.
+Log as you go. Any message to Claude that starts with **`TICKET-xxx Note:`** or **`TICKET-xxx Log:`** is added to that ticket's **Work notes** in GitHub straight away, **verbatim**, stamped with the time it was sent (as a ticketing system timestamps a work note), and confirmed in one line. Two records are kept side by side: **work notes** are the record of what the analyst did and when it was recorded; **device logs (UTC)** are the record of what the equipment did.
 
 **Forgot to log a step?** Send **`TICKET-xxx Late Log:`** with roughly when it happened. It's recorded as a **late entry** with two times, when it happened and when it was recorded (e.g. `≈15:33 (late entry, recorded 15:58)`). The "happened" time comes from evidence: `show logging`, `show history`, terminal scrollback or monitoring timestamps; otherwise it's marked approx. Original entries are never rewritten or backdated.
 

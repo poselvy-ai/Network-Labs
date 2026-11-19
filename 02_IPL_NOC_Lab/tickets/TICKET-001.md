@@ -12,7 +12,7 @@
 | Incident Commander | Ops Lead |
 | Status | **Resolved, monitoring.** Service restored 15:34 PST. Security escalation with IC; [RCA](./TICKET-001-RCA.md) open pending Security review |
 
-> Device logs are in **UTC**. Times in this ticket are **PST (UTC−8)**. Where a device log exists, it is the source of truth for event times; times marked ≈ are reconstructed from the order of events.
+> Times are **PST (UTC−8)**. **Work notes** carry the time the analyst entered them (the ticket's record of analyst actions). **Device logs** are UTC and are the record of equipment events. Times marked ≈ are reconstructed from the order of events.
 
 ## Symptom
 
@@ -47,6 +47,94 @@ Substation 1 operators lost local visibility of feeder telemetry for about 14.5 
 | 15:45 | Analyst → Ops Lead | — | *"As we are at SEV-2 the priority is to restore service first."* (Accepted: ITIL restore-first. Note added: for manual changes on OT networks, a 30-second log/change check before reversing is good practice.) |
 | 15:50 | Analyst → Ops Lead | Status update | *"I have found that on SUB-R1 port E0/1 (10.2.10.1/24) was administratively downed, and have amined up the port. I have confirmed with the customer the telemetry has been restored to SCADA-PC1. I am deescalating the issue to SEV-4, while I prep the RCA and finishing gathering logs."* |
 | 15:50 | Ops Lead → Analyst | — | *"Good work getting the substation back fast. Confirmed restored. As IC, I'll make the severity call: marking Resolved, monitoring; severity of record stays SEV-2, which is why the RCA is required. Get me the logs and open the escalation to Security on who shut that port. RCA draft by tomorrow 15:00."* |
+
+## Work notes (as entered by the analyst)
+
+System-timestamped at the time each note was entered (PST), as a ticketing system would record them. Verbatim.
+
+**2026-11-18 15:20 · Patrick Selvy** (pre-incident check)
+```
+Step 1 sucessussfull
+HQ-PC1>ping 10.2.10.10
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 2/2/2 ms
+HQ-PC1>ping 172.16.50.10
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/202/1004 ms
+HQ-PC1>ping 8.8.8.8
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/202/1005 ms
+Moving to the ticket
+```
+
+**2026-11-18 15:29 · Patrick Selvy** (severity + notifications)
+```
+1. Substation 1 Loss of telemetry
+2. Initial P3 - Moderate
+[Initial notifications to Substation 1 and Ops Lead: see Communications]
+```
+
+**2026-11-18 15:35 · Patrick Selvy**
+```
+SUB-R1#show ip int bri
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            10.2.0.2        YES TFTP   up                    up
+Ethernet0/1            10.2.10.1       YES TFTP   administratively down down
+Ethernet0/2            unassigned      YES unset  administratively down down
+Ethernet0/3            unassigned      YES unset  administratively down down
+Loopback0              10.255.255.4    YES TFTP   up                    up
+
+Interface E0/1 is Admin Down.
+```
+
+**2026-11-18 15:44 · Patrick Selvy** (resolution message to Substation 1: see Communications)
+
+**2026-11-18 15:45 · Patrick Selvy**
+```
+As we are at Sev-2 the priority is to restore service first.
+```
+
+**2026-11-18 15:50 · Patrick Selvy** (status update to Ops Lead: see Communications)
+
+**2026-11-18 15:52 · Patrick Selvy**
+```
+SUB-R1#show ip int br
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            10.2.0.2        YES TFTP   up                    up
+Ethernet0/1            10.2.10.1       YES TFTP   up                    up
+Ethernet0/2            unassigned      YES unset  administratively down down
+Ethernet0/3            unassigned      YES unset  administratively down down
+Loopback0              10.255.255.4    YES TFTP   up                    up
+
+Interface change Logs
+SUB-R1#show logging | include Ethernet0/1|CONFIG
+[device log: see Device log below]
+```
+
+**2026-11-18 15:55 · Patrick Selvy**
+```
+Logs are UTC by design (common practice: UTC is constant). Will note for leadership; not proposing a change.
+```
+
+**2026-11-18 16:17 · Patrick Selvy** (late entry: ping run ≈15:35, after restore)
+```
+CORE-R2#ping 10.2.10.10
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 1/1/2 ms
+```
+
+**2026-11-18 16:43 · Patrick Selvy**
+```
+To: Ops Lead
+Subject: TICKET-001: SCADA workstation connectivity, restoration and closure.
+After restoration of service, I was able to find the SUB-R1 port E0/1 was admined down on
+"*Nov 18 23:19:50.389: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/1, changed state to down".
+Unfortunately, I am unable to proceed further as the console does not need "User Authentication" to log in.
+Also, the "*" indicates that the time is set to the device time not NTP time. I am not sure if these are by
+designed or not and will leave escalation in your hands.
+I have filled out the initial part of the RCA, for you to go over and fill in the rest.
+[RCA draft attached: TICKET-001-RCA-analyst-draft.txt]
+```
 
 ## Troubleshooting log
 
