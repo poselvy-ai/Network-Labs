@@ -97,7 +97,7 @@ Note: the ticket would be stronger with the path evidence that led to SUB-R1 (`p
 | 15:50 | Status update to Ops Lead; IC marks Resolved, monitoring | Comms |
 | 15:52 | Post-fix verification and log collection | `show ip int brief`, `show logging` |
 
-**Key measures:** time to detect 11 s · time to acknowledge (customer) ≈9 min after the call · time to restore 14 min 31 s from fault (14 min 20 s from alert).
+**Key measures:** time to detect 11 s · time to acknowledge (customer) ≈7 min after the call · time to restore 14 min 31 s from fault (14 min 20 s from alert).
 
 ## Findings
 
