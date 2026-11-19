@@ -67,7 +67,7 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 >
 > We've opened **ISPA-INC-88213**. To locate your service we need:
 > 1. **Circuit ID** and account number. We can't search by IP alone.
-> 2. Please confirm the AS numbers. Your note lists 203.0.113.1 as AS 65001; 65001 is your AS on our records request, not ours.
+> 2. Please confirm the AS numbers. Your note lists 203.0.113.1 as AS 65001, but our records show 65001 is **your** AS; ours is 65100.
 > 3. The state of your interface facing us, and whether you can ping 203.0.113.1.
 > 4. A callback name and number.
 >
