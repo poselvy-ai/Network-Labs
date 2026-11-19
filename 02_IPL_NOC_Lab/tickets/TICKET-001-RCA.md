@@ -37,10 +37,10 @@ Template: [Incident Response Playbook RCA Template](https://github.com/poselvy-a
 | — | **Bridge initiated:** none (see section 7) |
 | ≈15:33 | Analyst finds SUB-R1 Ethernet0/1 administratively down |
 | 15:34:20 | **Actions taken / Resolution:** Analyst re-enables Ethernet0/1 (`no shutdown`); service restored (log) |
+| ≈15:35 | Reachability confirmed from the core (CORE-R2 → SCADA-PC1); late entry, recorded 16:17 |
 | 15:44 | Substation 1 operator confirms telemetry on all feeders |
 | 15:50 | Analyst status update; IC marks incident Resolved, monitoring (severity of record SEV-2) |
 | 15:52 | Post-fix verification on SUB-R1 and log collection |
-| 16:17 | Reachability confirmed from the core (CORE-R2 → SCADA-PC1) |
 | 16:43 | Analyst submits RCA draft and observations to IC; Security escalation handed to IC |
 
 ---
@@ -105,6 +105,7 @@ The final root cause depends on Security's review: who had console access, and w
 - Analyst acknowledged the site and the Ops Lead within minutes.
 - Fault isolated and service restored within about 15 minutes of the fault, using a Tier 1 standard change.
 - Restoration verified on the device, by the customer and from the core.
+- A forgotten log step was later recorded as a marked late entry, not inserted silently.
 - Good evidence collection: before/after interface status and device log; correct UTC → PST conversion; observations (NTP, AAA) raised to leadership instead of changing them.
 
 ### What went poorly
@@ -213,7 +214,7 @@ Loopback0              10.255.255.4    YES TFTP   up                    up
 *Nov 18 23:34:49.721: %SYS-5-CONFIG_I: Configured from console by console
 ```
 
-**Core-side verification (16:17 PST):**
+**Core-side verification (≈15:35 PST, late entry recorded 16:17):**
 ```
 CORE-R2#ping 10.2.10.10
 .!!!!
