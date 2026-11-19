@@ -8,8 +8,10 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 |---|------|-----------|----------------|
 | [C1](#c1) | 17:51 | Analyst → Ops Lead | EDGE-R1 BGP idle to ISP-A, over Utilized ISP-B - Investigating |
 | [C2](#c2) | 18:25 | Analyst → ISP-A NOC | IPL - TICKET-002 - BGP IP Unreachable |
-| [C3](#c3) | 18:31 | ISP-A NOC → Analyst | Re: carrier ticket ISPA-INC-88213 opened, information requested |
-| [C4](#c4) | 18:31 | Ops Lead → Analyst | Update overdue |
+| [C3](#c3) | 18:28 | ISP-A NOC → Analyst | Re: carrier ticket ISPA-INC-88213 opened, information requested |
+| [C4](#c4) | 18:28 | Ops Lead → Analyst | Update overdue |
+| [C5](#c5) | 18:30 | Analyst → Ops Lead | EDGE-R1 BGP idle to ISP-A, over Utilized ISP-B - Working |
+| [C6](#c6) | 18:32 | Ops Lead → Analyst | Circuit ID and account provided |
 
 ---
 
@@ -60,7 +62,7 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 > IPL NOC
 
 ### C3
-**Time:** 2026-11-18 18:31 · **From:** ISP-A NOC (Tier 1) · **To:** IPL NOC
+**Time:** 2026-11-18 18:28 · **From:** ISP-A NOC (Tier 1) · **To:** IPL NOC
 **Subject:** RE: IPL - TICKET-002 - BGP IP Unreachable [ISPA-INC-88213]
 
 > Hello IPL NOC,
@@ -78,9 +80,26 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 > ISP-A NOC
 
 ### C4
-**Time:** 2026-11-18 18:31 · **From:** Ops Lead · **To:** Patrick S.
+**Time:** 2026-11-18 18:28 · **From:** Ops Lead · **To:** Patrick S.
 
 > Patrick, I haven't seen your 18:21 update. Send me where we stand, and include the carrier's ticket number. The circuit ID is in our carrier contacts doc.
+
+### C5
+**Time:** 2026-11-18 18:30 · **From:** Patrick S. · **To:** Ops Leads
+**Subject:** EDGE-R1 BGP idle to ISP-A, over Utilized ISP-B - Working.
+
+> Hello Ops Leads.
+>
+> Sorry for the delay, I have discovered that I am unable to reach ISP-A port E0/0 (203.0.113.1/AS 65001) from EDGE-R1. I am currently work with carrier to resolve the issue.
+>
+> I do need your assistance as they requesting our Circuit ID and Account number to assist us.
+>
+> Carrier ticket: ISPA-INC-88213
+
+### C6
+**Time:** 2026-11-18 18:32 · **From:** Ops Lead · **To:** Patrick S.
+
+> Thanks for the update and for asking. ISP-A circuit **ISPA-ETH-0451-IPL**, account **IPL-77310**. It's in the carrier contacts doc (design/carrier-contacts.md); bookmark it, you'll need it every carrier call. One correction before you reply to them: ISP-A is **AS 65100**, we're 65001. Send them the circuit ID, our interface status, the failed ping and a callback number, and copy me. Next update to me by 19:00.
 
 ---
 

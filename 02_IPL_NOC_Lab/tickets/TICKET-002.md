@@ -9,7 +9,7 @@
 | Reported by | SolarWinds alerts (17:40, 17:41) |
 | Affected | Internet edge: EDGE-R1 ↔ ISP-A (203.0.113.0/30, AS 65100) |
 | Analyst | Patrick Selvy, NOC Analyst 1 |
-| Status | **Escalated to carrier** (ISP-A ticket ISPA-INC-88213, 18:31) |
+| Status | **Escalated to carrier** (ISP-A ticket ISPA-INC-88213, 18:28) |
 
 > Times are **PST (UTC−8)**. **Work notes** carry the time the analyst entered them. **Device logs** are UTC and are the record of equipment events.
 
@@ -41,8 +41,10 @@ Full emails and replies: **[TICKET-002 communications log](./TICKET-002-comms.md
 |---|------|-----------|----------------|
 | [C1](./TICKET-002-comms.md#c1) | 17:51 | Analyst → Ops Lead | EDGE-R1 BGP idle to ISP-A, over Utilized ISP-B - Investigating |
 | [C2](./TICKET-002-comms.md#c2) | 18:25 | Analyst → ISP-A NOC | Carrier ticket opened: BGP IP unreachable |
-| [C3](./TICKET-002-comms.md#c3) | 18:31 | ISP-A NOC → Analyst | ISPA-INC-88213 opened; circuit ID and details requested |
-| [C4](./TICKET-002-comms.md#c4) | 18:31 | Ops Lead → Analyst | 18:21 update overdue |
+| [C3](./TICKET-002-comms.md#c3) | 18:28 | ISP-A NOC → Analyst | ISPA-INC-88213 opened; circuit ID and details requested |
+| [C4](./TICKET-002-comms.md#c4) | 18:28 | Ops Lead → Analyst | 18:21 update overdue |
+| [C5](./TICKET-002-comms.md#c5) | 18:30 | Analyst → Ops Lead | Working with carrier; circuit ID requested |
+| [C6](./TICKET-002-comms.md#c6) | 18:32 | Ops Lead → Analyst | Circuit ID and account provided; next update 19:00 |
 
 ## Work notes (as entered by the analyst)
 
