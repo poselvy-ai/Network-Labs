@@ -62,7 +62,7 @@ graph TD
 - **NOC vantage point:** **HQ-PC1 (10.0.10.10) is the NOC workstation.** "Test from the NOC" means run it from HQ-PC1: it checks the full path a user's traffic takes from HQ.
 - **Hosts:** the PCs are IOL nodes with `no ip routing` and a default gateway. **DMZ-SRV1 is an Ubuntu server** (cloud-init build) running a systemd web service on TCP/80, with ufw allowing HTTP from anywhere and SSH only from 10.0.0.0/16. Replaced the original IOL stand-in in the v2 rebuild (see [archived change](./changes/archive/V1-C-20261116002.md)).
 
-Full addressing: [`design/addressing.md`](./design/addressing.md) · Design choices: [`design/decisions.md`](./design/decisions.md)
+Full addressing: [`design/addressing.md`](./design/addressing.md) · Carrier circuits and NOC contacts: [`design/carrier-contacts.md`](./design/carrier-contacts.md) · Design choices: [`design/decisions.md`](./design/decisions.md)
 
 ## CML node budget (20-node limit)
 
@@ -102,7 +102,7 @@ Workflow and template: [`tickets/README.md`](./tickets/README.md)
 | Ticket | Summary | Status |
 |--------|---------|--------|
 | [TICKET-001](./tickets/TICKET-001.md) | Substation 1 SCADA workstation unreachable: SUB-R1 E0/1 shut down from console | SEV-2 · Resolved, monitoring · [RCA](./tickets/TICKET-001-RCA.md) open (pending Security) |
-| [TICKET-002](./tickets/TICKET-002.md) | EDGE-R1 BGP session to ISP-A down | SEV-3 · In progress |
+| [TICKET-002](./tickets/TICKET-002.md) | EDGE-R1 BGP session to ISP-A down | SEV-3 · Escalated to carrier |
 
 ### Archived (v1 build)
 
