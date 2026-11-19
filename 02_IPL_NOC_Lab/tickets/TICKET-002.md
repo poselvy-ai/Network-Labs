@@ -9,7 +9,7 @@
 | Reported by | SolarWinds alerts (17:40, 17:41) |
 | Affected | Internet edge: EDGE-R1 ↔ ISP-A (203.0.113.0/30, AS 65100) |
 | Analyst | Patrick Selvy, NOC Analyst 1 |
-| Status | **Escalated to carrier** (ISP-A ticket ISPA-INC-88213, 18:28) |
+| Status | **Resolved, pending closure.** Carrier fix (ISPA-INC-88213); ISP-A BGP restored 18:37:28 PST; verified 18:43 |
 
 > Times are **PST (UTC−8)**. **Work notes** carry the time the analyst entered them. **Device logs** are UTC and are the record of equipment events.
 
@@ -46,7 +46,8 @@ Full emails and replies: **[TICKET-002 communications log](./TICKET-002-comms.md
 | [C5](./TICKET-002-comms.md#c5) | 18:30 | Analyst → Ops Lead | Working with carrier; circuit ID requested |
 | [C6](./TICKET-002-comms.md#c6) | 18:32 | Ops Lead → Analyst | Circuit ID and account provided; next update 19:00 |
 | [C7](./TICKET-002-comms.md#c7) | 18:36 | Analyst → ISP-A NOC | Circuit ID, account, AS numbers |
-| [C8](./TICKET-002-comms.md#c8) | 18:44 | ISP-A NOC → Analyst | Their interface was shut in error during maintenance; restored 18:44; please confirm |
+| [C8](./TICKET-002-comms.md#c8) | 18:38 | ISP-A NOC → Analyst | Their interface was shut in error during maintenance; restored 18:37; please confirm |
+| [C9](./TICKET-002-comms.md#c9) | 18:45 | Ops Lead → Analyst | Traceroute from inside stops at hop 1 by design |
 
 ## Work notes (as entered by the analyst)
 
@@ -157,6 +158,42 @@ EDGE-R1#ping 203.0.113.5
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
 ```
 
+**2026-11-18 18:43 · Patrick Selvy**
+```
+EDGE-R1 ->ISP-A BGP has recovered after carrier fix.
+Still not able to traceroute from the HQ-PC1 to 8.8.8.8 this could be by design will ask ops leads.
+C72 carrier ticket.
+
+Logs
+EDGE-R1#show ip bgp summary
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+203.0.113.1     4        65100      11       5       20    0    0 00:00:25        4
+203.0.113.5     4        65200      76      73       24    0    0 01:03:04        4
+
+EDGE-R1#show ip bgp 8.8.8.8
+Paths: (2 available, best #1, table default)
+  65100 65300
+    203.0.113.1 from 203.0.113.1 (100.64.1.1)
+      Origin IGP, localpref 200, valid, external, best
+      Updated on Nov 19 2026 02:37:28 UTC
+  65200 65300
+    203.0.113.5 from 203.0.113.5 (100.64.2.1)
+      Origin IGP, localpref 100, valid, external
+      Updated on Nov 19 2026 01:35:20 UTC
+
+EDGE-R1#Ping 203.0.113.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
+
+EDGE-R1# show log | include bgp |neighbor 203.0.113.1
+[... 01:34:42 and 01:38:51 entries as before ...]
+*Nov 19 02:37:28.455: %BGP-5-ADJCHANGE: neighbor 203.0.113.1 Up
+
+HQ-PC1>ping 8.8.8.8
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 4/13/31 ms
+```
+
 ## Troubleshooting log
 
 | Time (PST) | Device | Command | Result | Conclusion |
@@ -172,9 +209,31 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
 | 18:18 | EDGE-R1 | `show bgp summary` (`show ip bgp summary` is the current form) | ISP-A 203.0.113.1: **Active**, 0 msgs, down 00:38:08. ISP-B 203.0.113.5: **Established**, up 00:42:10, **4 prefixes** received | ISP-A session down (Active = retrying, no TCP session). ISP-B healthy |
 | 18:18 | EDGE-R1 | `show ip bgp 8.8.8.8` | 1 path: AS path 65200 65300 via **203.0.113.5**, localpref 100, best | **Failover confirmed:** internet traffic using ISP-B. Normal ISP-A path (localpref 200) gone |
 | 18:18 | EDGE-R1 | `ping 203.0.113.5` | 5/5 | ISP-B peer reachable |
+| 18:43 | EDGE-R1 | `show ip bgp summary` | ISP-A 203.0.113.1 **Established**, 4 prefixes (up 00:00:25 at time of command); ISP-B Established, 4 prefixes | Both sessions up: redundancy restored |
+| 18:43 | EDGE-R1 | `show ip bgp 8.8.8.8` | 2 paths; **best via 203.0.113.1** (65100 65300, localpref 200); backup via 203.0.113.5 (localpref 100) | Traffic back on the primary ISP as designed |
+| 18:43 | EDGE-R1 | `ping 203.0.113.1` | 5/5 | ISP-A peer reachable |
+| 18:43 | EDGE-R1 | `show logging \| include bgp` | `02:37:28 UTC: neighbor 203.0.113.1 Up` | **ISP-A session restored 18:37:28 PST** |
+| 18:43 | HQ-PC1 (NOC) | `ping 8.8.8.8` | 5/5 | End-to-end verified from the NOC |
+
+## Incident timeline (PST)
+
+| Time | Event | Source |
+|------|-------|--------|
+| 17:34:42 | Both BGP sessions reset at once (cause unexplained; observation only) | EDGE-R1 log (01:34:42 UTC) |
+| ≈17:35:51 | ISP-A shuts its customer-facing interface in error during maintenance (session hold timer 180 s → last keepalive) | Carrier (C8) + hold-timer arithmetic |
+| 17:38:51 | BGP to ISP-A down (hold time expired); traffic fails over to ISP-B | EDGE-R1 log (01:38:51 UTC) |
+| 17:40–17:41 | SolarWinds alerts: BGP peer Idle; traffic shift to ISP-B | Monitoring |
+| 17:51 | Ticket opened, SEV-3; internet verified from the NOC | Work note |
+| 18:18 | Failover to ISP-B confirmed; ISP-A peer unreachable across an up/up link | Work note |
+| 18:25 | Carrier ticket opened with ISP-A (ISPA-INC-88213 at 18:28) | C2, C3 |
+| 18:36 | Circuit ID and account provided to carrier | C7 |
+| **18:37:28** | **ISP-A re-enables its interface; BGP to ISP-A Established** | EDGE-R1 log (02:37:28 UTC) |
+| 18:43 | Verified: both sessions up, primary path via ISP-A, internet OK from the NOC | Work note |
+
+**Key measures:** loss of redundancy 58 min 37 s (17:38:51 → 18:37:28); user impact none; time from alert to carrier ticket ≈45 min (≈8 min of that waiting on the circuit ID).
 
 ## Root cause
-_TBD_
+Carrier-side: ISP-A shut down its customer-facing interface toward IPL in error during unrelated maintenance on its PE router (per ISP-A, C8). Carrier RFO due within 2 business days.
 
 ## Resolution / escalation
 _TBD_

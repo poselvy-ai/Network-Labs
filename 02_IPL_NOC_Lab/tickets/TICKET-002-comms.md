@@ -13,7 +13,8 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 | [C5](#c5) | 18:30 | Analyst → Ops Lead | EDGE-R1 BGP idle to ISP-A, over Utilized ISP-B - Working |
 | [C6](#c6) | 18:32 | Ops Lead → Analyst | Circuit ID and account provided |
 | [C7](#c7) | 18:36 | Analyst → ISP-A NOC | ISPA-INC-88213 (circuit ID, account, AS) |
-| [C8](#c8) | 18:44 | ISP-A NOC → Analyst | Fault found on ISP-A side; restored, please confirm |
+| [C8](#c8) | 18:38 | ISP-A NOC → Analyst | Fault found on ISP-A side; restored, please confirm |
+| [C9](#c9) | 18:45 | Ops Lead → Analyst | Traceroute from inside: by design |
 
 ---
 
@@ -118,7 +119,7 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 > IPL NOC
 
 ### C8
-**Time:** 2026-11-18 18:44 · **From:** ISP-A NOC (Tier 2) · **To:** IPL NOC
+**Time:** 2026-11-18 18:38 · **From:** ISP-A NOC (Tier 2) · **To:** IPL NOC
 **Subject:** RE: ISPA-INC-88213 — fault found, service restored, please confirm
 
 > Hello IPL NOC,
@@ -127,11 +128,16 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 >
 > **Finding:** our customer-facing interface toward you (203.0.113.1) was **administratively shut down** at approximately 17:35 PST during unrelated maintenance on our PE router. An engineer applied a change to the wrong port. Our change team is reviewing it.
 >
-> **Action:** interface re-enabled at **18:44 PST**. We see ARP for 203.0.113.2 again.
+> **Action:** interface re-enabled at **18:37 PST**. We see ARP for 203.0.113.2 again.
 >
 > Please confirm your BGP session to 203.0.113.1 is Established and you're receiving routes. We'll keep ISPA-INC-88213 open until you confirm, and send an RFO (reason for outage) within 2 business days.
 >
 > ISP-A NOC · +1-555-0100
+
+### C9
+**Time:** 2026-11-18 18:45 · **From:** Ops Lead · **To:** Patrick S.
+
+> Good question to ask instead of chasing it. Yes, by design: FW1 doesn't show up in a traceroute and doesn't pass the outside routers' time-exceeded replies back in, so from inside you'll only ever see hop 1. To see the ISP path, run the trace from EDGE-R1 with `source 198.51.100.1`. Nice work on the verification. Confirm with ISP-A, send me the 19:00 update with your recommendation.
 
 ---
 
