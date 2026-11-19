@@ -12,7 +12,7 @@
 | Incident Commander | Ops Lead |
 | Status | **Resolved, monitoring.** Service restored 15:34 PST. Security escalation and RCA open |
 
-> Device logs are in **UTC**. Times in this ticket are **PST (UTC−8)** with the UTC log time where it comes from a device.
+> Device logs are in **UTC**. Times in this ticket are **PST (UTC−8)**. Where a device log exists, it is the source of truth for event times; times marked ≈ are reconstructed from the order of events.
 
 ## Symptom
 
@@ -52,9 +52,9 @@ Substation 1 operators lost local visibility of feeder telemetry for about 14.5 
 
 | Time (PST) | Device | Command | Result | Conclusion |
 |------------|--------|---------|--------|------------|
-| 15:20 | HQ-PC1 | `ping 10.2.10.10`, `ping 172.16.50.10`, `ping 8.8.8.8` (pre-incident baseline) | All OK (first-packet ARP loss only) | Network healthy before the fault |
-| 15:35 | SUB-R1 | `show ip interface brief` | **Ethernet0/1 (10.2.10.1) administratively down / down**. E0/2, E0/3 admin down (unused, by design) | SCADA LAN gateway interface manually shut down |
-| 15:34 | SUB-R1 | `interface Ethernet0/1` → `no shutdown` | Interface up | Standard change (Tier 1 runbook). Service restored |
+| before 15:19:49 | HQ-PC1 | `ping 10.2.10.10`, `ping 172.16.50.10`, `ping 8.8.8.8` (pre-incident baseline) | All OK (first-packet ARP loss only) | Network healthy before the fault |
+| ≈15:33 (before 15:34:20) | SUB-R1 | `show ip interface brief` | **Ethernet0/1 (10.2.10.1) administratively down / down**. E0/2, E0/3 admin down (unused, by design) | SCADA LAN gateway interface manually shut down |
+| 15:34:20 (device log) | SUB-R1 | `interface Ethernet0/1` → `no shutdown` | Interface up | Standard change (Tier 1 runbook). Service restored |
 | 15:52 | SUB-R1 | `show ip interface brief` | Ethernet0/1 up / up | Fix verified on the device |
 | 15:52 | SUB-R1 | `show logging \| include Ethernet0/1\|CONFIG` | See below | Fault time and source identified |
 
@@ -82,6 +82,22 @@ Note: the ticket would be stronger with the path evidence that led to SUB-R1 (`p
 | **23:19:49** | **15:19:49** | **Configured from console (no username); E0/1 administratively down: the fault** |
 | 23:34:20 | **15:34:20** | E0/1 up: service restored (NOC `no shutdown`) |
 | 23:34:49 | 15:34 | NOC exits config mode |
+
+## Incident timeline (PST)
+
+| Time | Event | Source |
+|------|-------|--------|
+| 15:19:49 | SUB-R1 E0/1 shut down from console | SUB-R1 log (23:19:49 UTC) |
+| 15:20 | SolarWinds: SCADA-PC1 node down | Monitoring |
+| 15:22 | Substation 1 operator reports loss of telemetry | Phone |
+| 15:29 | Initial notifications to Substation 1 and Ops Lead; IC sets SEV-2 | Comms |
+| ≈15:33 | Analyst finds SUB-R1 E0/1 administratively down | `show ip int brief` |
+| **15:34:20** | **E0/1 re-enabled, service restored** | SUB-R1 log (23:34:20 UTC) |
+| 15:44 | Operator confirms telemetry on all feeders | Phone |
+| 15:50 | Status update to Ops Lead; IC marks Resolved, monitoring | Comms |
+| 15:52 | Post-fix verification and log collection | `show ip int brief`, `show logging` |
+
+**Key measures:** time to detect 11 s · time to acknowledge (customer) ≈9 min after the call · time to restore 14 min 31 s from fault (14 min 20 s from alert).
 
 ## Findings
 
