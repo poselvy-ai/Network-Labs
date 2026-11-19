@@ -34,3 +34,15 @@ Format for each entry: **Symptom → Evidence → Cause → Fix → Lesson.**
 - **Cause:** An IOL router's built-in HTTP service is not a production web server.
 - **Fix:** Rebuilt the lab (v2) with an Ubuntu web server in the DMZ.
 - **Lesson:** Lab stand-ins should behave like what they represent, or the tickets teach the wrong things.
+
+---
+
+## 3. v2 tickets
+
+### 3.1 TICKET-001: Substation 1 SCADA outage (SEV-2)
+- **Log as I go.** Write each finding into the ticket the moment it happens. Reconstructing the log afterwards produced wrong and out-of-order times that had to be corrected against the device log.
+- **Use one trigger for logging.** "TICKET-xxx Note:" or "TICKET-xxx Log:" puts the entry in the ticket immediately.
+- **Device logs (UTC) are the source of truth for times**; never backdate an entry.
+- **"Administratively down" means a person changed it**: restore first at SEV-2, but check the logs and confirm before reversing on OT equipment.
+- **Severity = impact × urgency**; SCADA at a utility starts at SEV-2. Restored ≠ de-escalated.
+- Full record: [TICKET-001](./tickets/TICKET-001.md) · [RCA](./tickets/TICKET-001-RCA.md)
