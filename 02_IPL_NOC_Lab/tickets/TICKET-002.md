@@ -64,12 +64,29 @@ TICKET-002 - SEV-3
 Medium Urgency/ Low Impact
 ```
 
+**2026-11-18 17:57 · Patrick Selvy**
+```
+Trace route failed on HQ-PC1 but ping was able to go through on AS 65300
+
+LOG
+HQ-PC1>traceroute 8.8.8.8
+Tracing the route to 8.8.8.8
+  1 10.0.10.1 2 msec 0 msec 1 msec
+  2  *  *  *
+  [hops 3-30: *  *  *]
+HQ-PC1>ping 8.8.8.8
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 4/12/29 ms
+```
+
 ## Troubleshooting log
 
 | Time (PST) | Device | Command | Result | Conclusion |
 |------------|--------|---------|--------|------------|
 | 17:51 | HQ-PC1 (NOC) | `ping 8.8.8.8` | 5/5, 6/17/33 ms | Internet reachable from the NOC |
 | 17:51 | HQ-PC1 (NOC) | `ping 172.16.50.10` | 5/5 | DMZ web server reachable |
+| 17:57 | HQ-PC1 (NOC) | `traceroute 8.8.8.8` | Hop 1 10.0.10.1 (CORE-R1), then `* * *` to hop 30 | Expected: FW1 (ASA) hides itself and doesn't pass ICMP time-exceeded from outside routers, so a trace from inside can't show the ISP path. Not a fault |
+| 17:57 | HQ-PC1 (NOC) | `ping 8.8.8.8` | 5/5, 4/12/29 ms | Internet (AS 65300) still reachable |
 
 ## Root cause
 _TBD_
