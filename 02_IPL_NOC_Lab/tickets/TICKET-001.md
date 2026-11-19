@@ -57,6 +57,7 @@ Substation 1 operators lost local visibility of feeder telemetry for about 14.5 
 | 15:34:20 (device log) | SUB-R1 | `interface Ethernet0/1` → `no shutdown` | Interface up | Standard change (Tier 1 runbook). Service restored |
 | 15:52 | SUB-R1 | `show ip interface brief` | Ethernet0/1 up / up | Fix verified on the device |
 | 15:52 | SUB-R1 | `show logging \| include Ethernet0/1\|CONFIG` | See below | Fault time and source identified |
+| 16:17 | CORE-R2 | `ping 10.2.10.10` | `.!!!!` 4/5, 1/1/2 ms | Reachable from the core across the WAN. First packet lost to ARP (normal); no further loss |
 
 Note: the ticket would be stronger with the path evidence that led to SUB-R1 (`ping` / `traceroute 10.2.10.10` from the NOC side stopping at 10.2.0.2).
 
@@ -96,6 +97,7 @@ Note: the ticket would be stronger with the path evidence that led to SUB-R1 (`p
 | 15:44 | Operator confirms telemetry on all feeders | Phone |
 | 15:50 | Status update to Ops Lead; IC marks Resolved, monitoring | Comms |
 | 15:52 | Post-fix verification and log collection | `show ip int brief`, `show logging` |
+| 16:17 | Reachability confirmed from the core (CORE-R2 → SCADA-PC1) | `ping` |
 
 **Key measures:** time to detect 11 s · time to acknowledge (customer) ≈7 min after the call · time to restore 14 min 31 s from fault (14 min 20 s from alert).
 
