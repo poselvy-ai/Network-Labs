@@ -100,7 +100,7 @@ Workflow and template: [`tickets/README.md`](./tickets/README.md)
 
 | Ticket | Summary | Status |
 |--------|---------|--------|
-| — | No open tickets on the v2 baseline yet | — |
+| [TICKET-001](./tickets/TICKET-001.md) | Substation 1 SCADA workstation unreachable: SUB-R1 E0/1 shut down from console | SEV-2 · Resolved, monitoring · Security escalation + RCA open |
 
 ### Archived (v1 build)
 
