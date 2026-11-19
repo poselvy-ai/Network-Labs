@@ -19,6 +19,8 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 | [C11](#c11) | 18:46 | ISP-A NOC → Analyst | Ticket set to monitoring 72 h; RFO to follow |
 | [C12](#c12) | 18:47 | Analyst → ISP-A NOC | RFO requested |
 | [C13](#c13) | 18:49 | ISP-A NOC → Analyst | RFO request acknowledged |
+| [C14](#c14) | 18:59 | Analyst → Ops Lead | Resolved; recommends SEV-5 monitoring for 4 days pending RFO |
+| [C15](#c15) | 19:03 | Ops Lead → Analyst | Status Resolved, monitoring; severity stays SEV-3; close after RFO; no RCA |
 
 ---
 
@@ -180,6 +182,30 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 > Acknowledged. The RFO request is logged against ISPA-INC-88213 and will be sent to your account contact and to this address within 2 business days (by 2026-11-20).
 >
 > ISP-A NOC · +1-555-0100
+
+### C14
+**Time:** 2026-11-18 18:59 · **From:** Patrick S. · **To:** Ops Leads
+**Subject:** EDGE-R1 BGP idle to ISP-A, over Utilized ISP-B
+
+> Hello Leads,
+>
+> I have confirmed that the ISP-A (203.0.113.1/AS65001) has been resolved. EDGE-R1 shows the state went UP at "*Nov 18 23:04:53.326: %BGP-5-ADJCHANGE: neighbor 203.0.113.1". According to the logs I am able to receive 4 prefixes from 203.0.113.1.
+>
+> I recommend we place this ticket in SEV-5 "Informational / Monitoring Only" for the next 4 days as the carrier is supposed to be following up with us with an RFO in three days.
+>
+> Thank you.
+>
+> Patrick S.
+
+### C15
+**Time:** 2026-11-18 19:03 · **From:** Ops Lead · **To:** Patrick S.
+
+> Good work, Patrick: right call to send it to the carrier, solid verification, and good thinking to hold the ticket until the RFO arrives. My decisions as IC:
+> - **Status: Resolved, monitoring.** Severity of record **stays SEV-3**. Same as TICKET-001: we change the status, not the severity.
+> - **Closure:** when ISP-A's 72-hour monitoring ends (11/21 18:46) **and** the RFO is attached (due 11/20).
+> - **RCA:** not required at SEV-3, and I'm not requesting one. The carrier's RFO covers the cause. One internal action: we lost about 8 minutes finding the circuit ID, so carrier contacts go into the NOC runbook.
+>
+> Two corrections for the ticket: ISP-A is **AS 65100**, and the restore time is the **02:37:28 UTC** Up line (18:37:28 PST). The 23:04:53 line is from when the lab started.
 
 ---
 

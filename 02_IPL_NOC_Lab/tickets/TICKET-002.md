@@ -9,7 +9,7 @@
 | Reported by | SolarWinds alerts (17:40, 17:41) |
 | Affected | Internet edge: EDGE-R1 ↔ ISP-A (203.0.113.0/30, AS 65100) |
 | Analyst | Patrick Selvy, NOC Analyst 1 |
-| Status | **Resolved, pending closure.** Carrier fix (ISPA-INC-88213); ISP-A BGP restored 18:37:28 PST; verified 18:43 |
+| Status | **Resolved, monitoring.** ISP-A BGP restored 18:37:28 PST, verified 18:43. Close after ISP-A monitoring ends (2026-11-21 18:46) and RFO attached (due 2026-11-20). No RCA (SEV-3) |
 
 > Times are **PST (UTC−8)**. **Work notes** carry the time the analyst entered them. **Device logs** are UTC and are the record of equipment events.
 
@@ -32,6 +32,8 @@ No user impact observed: internet reachable from the NOC. Internet edge running 
 | Time (PST) | SEV | Set by | Reason |
 |------------|-----|--------|--------|
 | 17:51 | SEV-3 (P3) | Analyst | Impact Low × Urgency Medium |
+| 18:59 | Analyst recommended SEV-5 for monitoring | Analyst | Carrier RFO pending |
+| 19:03 | **SEV-3 kept** as severity of record; status → Resolved, monitoring | Ops Lead / IC | Status changes, severity of record doesn't |
 
 ## Communications
 
@@ -52,6 +54,8 @@ Full emails and replies: **[TICKET-002 communications log](./TICKET-002-comms.md
 | [C11](./TICKET-002-comms.md#c11) | 18:46 | ISP-A NOC → Analyst | Carrier ticket in monitoring 72 h (auto-close 11/21 18:46); RFO within 2 business days |
 | [C12](./TICKET-002-comms.md#c12) | 18:47 | Analyst → ISP-A NOC | RFO requested |
 | [C13](./TICKET-002-comms.md#c13) | 18:49 | ISP-A NOC → Analyst | RFO request logged; due by 2026-11-20 |
+| [C14](./TICKET-002-comms.md#c14) | 18:59 | Analyst → Ops Lead | Resolved; recommends SEV-5 monitoring pending RFO |
+| [C15](./TICKET-002-comms.md#c15) | 19:03 | Ops Lead → Analyst | Resolved, monitoring; stays SEV-3; close after RFO + carrier monitoring; no RCA |
 
 ## Work notes (as entered by the analyst)
 
@@ -240,7 +244,21 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 4/13/31 ms
 Carrier-side: ISP-A shut down its customer-facing interface toward IPL in error during unrelated maintenance on its PE router (per ISP-A, C8). Carrier RFO due within 2 business days.
 
 ## Resolution / escalation
-_TBD_
+
+Escalated to the carrier (ISP-A, ISPA-INC-88213). ISP-A re-enabled its customer-facing interface; BGP to 203.0.113.1 Established 18:37:28 PST. Verified at 18:43: both BGP sessions up, best path via ISP-A (localpref 200), internet reachable from the NOC.
+
+**Open until closure:** ISP-A RFO (due 2026-11-20) · ISP-A monitoring ends 2026-11-21 18:46.
+
+**Internal action:** add carrier circuit IDs and contacts to the NOC runbook (≈8 min lost finding the circuit ID).
+
+## Lessons learned
+- **If you can't ping the BGP neighbor, it's not a BGP problem yet.** BGP down was the symptom; loss of reachability across an up/up link pointed to the carrier.
+- **Know your facts before calling the carrier:** circuit ID, account, both IPs, both AS numbers (ISP-A is **65100**), start time in PST and UTC.
+- **Quote the right evidence:** the restore is the **02:37:28 UTC Up** line, not the earlier boot-time line.
+- **When another team corrects you, confirm it** rather than asking them to recheck.
+- **Severity of record stays; the status changes** (repeat lesson from TICKET-001).
+- **Traceroute from inside stops at hop 1 by design** (FW1). Trace from EDGE-R1 with `source 198.51.100.1`.
+
 
 ---
 

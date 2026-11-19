@@ -46,3 +46,10 @@ Format for each entry: **Symptom → Evidence → Cause → Fix → Lesson.**
 - **"Administratively down" means a person changed it**: restore first at SEV-2, but check the logs and confirm before reversing on OT equipment.
 - **Severity = impact × urgency**; SCADA at a utility starts at SEV-2. Restored ≠ de-escalated.
 - Full record: [TICKET-001](./tickets/TICKET-001.md) · [RCA](./tickets/TICKET-001-RCA.md)
+
+### 3.2 TICKET-002: ISP-A BGP down, carrier fault (SEV-3)
+- **No ping to the BGP neighbor = not a BGP problem yet.** Check reachability before blaming BGP.
+- **Carrier tickets need the circuit ID, account, both IPs, both AS numbers and the start time (PST + UTC).** Keep the [carrier contacts](./design/carrier-contacts.md) handy.
+- **Accuracy builds trust with other teams:** the wrong AS number was repeated three times.
+- **Hold the ticket for the RFO**, but change the status, not the severity.
+- Full record: [TICKET-002](./tickets/TICKET-002.md)
