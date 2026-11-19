@@ -59,6 +59,7 @@ graph TD
 - **Internal routing:** OSPF process 1. Area 0 = core, firewall and HQ users; area 1 = Reno (dual-homed to both cores); area 2 = substation (single-homed to CORE-R2).
 - **Firewall (FW1):** inside1/inside2 (security 100) to the cores, dmz (50), outside (0). PAT for 10.0.0.0/8; static NAT for the DMZ web server to `198.51.100.10`. Injects the default route into OSPF.
 - **Internet edge (EDGE-R1, AS 65001):** eBGP to two ISPs. ISP-A is preferred outbound (local-pref 200) and inbound (AS-path prepend toward ISP-B). Advertises only `198.51.100.0/24`.
+- **NOC vantage point:** **HQ-PC1 (10.0.10.10) is the NOC workstation.** "Test from the NOC" means run it from HQ-PC1: it checks the full path a user's traffic takes from HQ.
 - **Hosts:** the PCs are IOL nodes with `no ip routing` and a default gateway. **DMZ-SRV1 is an Ubuntu server** (cloud-init build) running a systemd web service on TCP/80, with ufw allowing HTTP from anywhere and SSH only from 10.0.0.0/16. Replaced the original IOL stand-in in the v2 rebuild (see [archived change](./changes/archive/V1-C-20261116002.md)).
 
 Full addressing: [`design/addressing.md`](./design/addressing.md) · Design choices: [`design/decisions.md`](./design/decisions.md)

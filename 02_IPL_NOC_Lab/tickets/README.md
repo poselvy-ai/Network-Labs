@@ -41,6 +41,8 @@ Log as you go. Any message to Claude that starts with **`TICKET-xxx Note:`** or 
 
 **Forgot to log a step?** Send **`TICKET-xxx Late Log:`** with roughly when it happened. It's recorded as a **late entry** with two times, when it happened and when it was recorded (e.g. `≈15:33 (late entry, recorded 15:58)`). The "happened" time comes from evidence: `show logging`, `show history`, terminal scrollback or monitoring timestamps; otherwise it's marked approx. Original entries are never rewritten or backdated.
 
+**NOC workstation:** HQ-PC1 (10.0.10.10). "Test from the NOC" = run it from HQ-PC1. Device-level checks (e.g. CORE-R2, SUB-R1) are extra evidence, not a replacement.
+
 ## How a ticket is worked
 
 Each ticket is worked like a NOC shift: alert → classify → triage → isolate → fix or escalate → communicate → document.
