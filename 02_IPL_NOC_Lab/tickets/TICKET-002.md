@@ -49,7 +49,9 @@ Full emails and replies: **[TICKET-002 communications log](./TICKET-002-comms.md
 | [C8](./TICKET-002-comms.md#c8) | 18:38 | ISP-A NOC → Analyst | Their interface was shut in error during maintenance; restored 18:37; please confirm |
 | [C9](./TICKET-002-comms.md#c9) | 18:45 | Ops Lead → Analyst | Traceroute from inside stops at hop 1 by design |
 | [C10](./TICKET-002-comms.md#c10) | 18:45 | Analyst → ISP-A NOC | BGP confirmed up; keep carrier ticket open 72 h |
-| [C11](./TICKET-002-comms.md#c11) | 18:50 | ISP-A NOC → Analyst | Carrier ticket in monitoring 72 h (auto-close 11/21 18:50); RFO within 2 business days |
+| [C11](./TICKET-002-comms.md#c11) | 18:46 | ISP-A NOC → Analyst | Carrier ticket in monitoring 72 h (auto-close 11/21 18:46); RFO within 2 business days |
+| [C12](./TICKET-002-comms.md#c12) | 18:47 | Analyst → ISP-A NOC | RFO requested |
+| [C13](./TICKET-002-comms.md#c13) | 18:49 | ISP-A NOC → Analyst | RFO request logged; due by 2026-11-20 |
 
 ## Work notes (as entered by the analyst)
 

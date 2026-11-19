@@ -16,7 +16,9 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 | [C8](#c8) | 18:38 | ISP-A NOC → Analyst | Fault found on ISP-A side; restored, please confirm |
 | [C9](#c9) | 18:45 | Ops Lead → Analyst | Traceroute from inside: by design |
 | [C10](#c10) | 18:45 | Analyst → ISP-A NOC | ISPA-INC-88213: BGP confirmed up; keep open 72 h |
-| [C11](#c11) | 18:50 | ISP-A NOC → Analyst | Ticket set to monitoring 72 h; RFO to follow |
+| [C11](#c11) | 18:46 | ISP-A NOC → Analyst | Ticket set to monitoring 72 h; RFO to follow |
+| [C12](#c12) | 18:47 | Analyst → ISP-A NOC | RFO requested |
+| [C13](#c13) | 18:49 | ISP-A NOC → Analyst | RFO request acknowledged |
 
 ---
 
@@ -154,10 +156,28 @@ Every message linked to TICKET-002, in full and in order. Times are PST, as sent
 > Thank you.
 
 ### C11
-**Time:** 2026-11-18 18:50 · **From:** ISP-A NOC · **To:** IPL NOC
+**Time:** 2026-11-18 18:46 · **From:** ISP-A NOC · **To:** IPL NOC
 **Subject:** RE: ISPA-INC-88213 — monitoring
 
-> Thanks for confirming. ISPA-INC-88213 is now in **Monitoring** for 72 hours and will close automatically on 2026-11-21 18:50 PST unless the circuit alarms again. The RFO for the maintenance error will be sent within 2 business days to the contact on your account. Reply to this ticket if you see any further issues.
+> Thanks for confirming. ISPA-INC-88213 is now in **Monitoring** for 72 hours and will close automatically on 2026-11-21 18:46 PST unless the circuit alarms again. The RFO for the maintenance error will be sent within 2 business days to the contact on your account. Reply to this ticket if you see any further issues.
+>
+> ISP-A NOC · +1-555-0100
+
+### C12
+**Time:** 2026-11-18 18:47 · **From:** IPL NOC · **To:** noc@isp-a.example
+**Subject:** ISPA-INC-88213
+
+> IPA-NOC
+>
+> Please provide an RFO for our records.
+>
+> Thank you.
+
+### C13
+**Time:** 2026-11-18 18:49 · **From:** ISP-A NOC · **To:** IPL NOC
+**Subject:** RE: ISPA-INC-88213
+
+> Acknowledged. The RFO request is logged against ISPA-INC-88213 and will be sent to your account contact and to this address within 2 business days (by 2026-11-20).
 >
 > ISP-A NOC · +1-555-0100
 
